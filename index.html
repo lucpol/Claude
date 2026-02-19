@@ -1,0 +1,1299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Luciano Pollastri — Director · Cyclist · AI Advocate</title>
+  <style>
+    /* ─── RESET & BASE ─────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --navy:    #0a0f2c;
+      --indigo:  #1a237e;
+      --blue:    #1565c0;
+      --cyan:    #00b4d8;
+      --teal:    #00897b;
+      --green:   #43a047;
+      --lime:    #c6ff00;
+      --yellow:  #ffd600;
+      --orange:  #ff6f00;
+      --red:     #e53935;
+      --pink:    #e91e63;
+      --purple:  #8e24aa;
+      --white:   #ffffff;
+      --off:     #f5f5f5;
+      --dark:    #12121f;
+    }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      background: var(--navy);
+      color: var(--white);
+      overflow-x: hidden;
+    }
+
+    /* ─── PARTICLES CANVAS ─────────────────────────────────────── */
+    #particles-canvas {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* ─── HERO ─────────────────────────────────────────────────── */
+    #hero {
+      position: relative;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 2rem;
+      overflow: hidden;
+    }
+    .hero-bg {
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at 30% 40%, #1a237e88 0%, transparent 60%),
+                  radial-gradient(ellipse at 70% 60%, #00897b55 0%, transparent 60%),
+                  linear-gradient(135deg, #0a0f2c 0%, #12122f 100%);
+      z-index: 0;
+    }
+    .hero-ring {
+      position: absolute;
+      border-radius: 50%;
+      border: 1px solid rgba(0,180,216,0.15);
+      animation: spin-ring linear infinite;
+    }
+    .hero-ring:nth-child(1){ width:600px;height:600px;top:50%;left:50%;transform:translate(-50%,-50%);animation-duration:30s; }
+    .hero-ring:nth-child(2){ width:800px;height:800px;top:50%;left:50%;transform:translate(-50%,-50%);animation-duration:45s;animation-direction:reverse; }
+    .hero-ring:nth-child(3){ width:1000px;height:1000px;top:50%;left:50%;transform:translate(-50%,-50%);animation-duration:60s; }
+    @keyframes spin-ring {
+      from { transform: translate(-50%,-50%) rotate(0deg); }
+      to   { transform: translate(-50%,-50%) rotate(360deg); }
+    }
+    .hero-content { position: relative; z-index: 1; }
+    .avatar-wrap {
+      width: 160px; height: 160px;
+      border-radius: 50%;
+      margin: 0 auto 2rem;
+      position: relative;
+    }
+    .avatar-wrap::before {
+      content:'';
+      position:absolute;
+      inset:-4px;
+      border-radius:50%;
+      background: conic-gradient(var(--cyan), var(--purple), var(--orange), var(--lime), var(--cyan));
+      animation: spin-ring linear 3s infinite;
+      z-index:-1;
+    }
+    .avatar-inner {
+      width: 100%; height: 100%;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--indigo) 0%, var(--teal) 100%);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 4rem;
+      border: 4px solid var(--navy);
+    }
+    h1.hero-name {
+      font-size: clamp(2.5rem, 6vw, 5rem);
+      font-weight: 900;
+      letter-spacing: -0.02em;
+      background: linear-gradient(90deg, var(--cyan), var(--lime), var(--orange), var(--pink));
+      background-size: 200% auto;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      animation: shimmer 4s linear infinite;
+    }
+    @keyframes shimmer {
+      to { background-position: 200% center; }
+    }
+    .hero-tagline {
+      font-size: clamp(1rem, 2.5vw, 1.4rem);
+      color: rgba(255,255,255,0.7);
+      margin: 0.75rem 0 2rem;
+      letter-spacing: 0.05em;
+    }
+    .hero-pills {
+      display: flex;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin-bottom: 3rem;
+    }
+    .pill {
+      padding: 0.4rem 1.1rem;
+      border-radius: 999px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      border: 1.5px solid;
+    }
+    .pill-blue  { border-color: var(--cyan);   color: var(--cyan);   }
+    .pill-green { border-color: var(--lime);   color: var(--lime);   }
+    .pill-orange{ border-color: var(--orange); color: var(--orange); }
+    .pill-pink  { border-color: var(--pink);   color: var(--pink);   }
+    .scroll-cue {
+      position: absolute;
+      bottom: 2rem;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.5rem;
+      opacity: 0.5;
+      animation: bounce 2s ease-in-out infinite;
+      z-index: 1;
+    }
+    .scroll-cue span { font-size: 0.75rem; letter-spacing: 0.1em; }
+    .scroll-arrow { font-size: 1.5rem; }
+    @keyframes bounce {
+      0%,100%{ transform:translateX(-50%) translateY(0); }
+      50%    { transform:translateX(-50%) translateY(8px); }
+    }
+
+    /* ─── SECTION WRAPPER ─────────────────────────────────────── */
+    section {
+      position: relative;
+      z-index: 1;
+      padding: 5rem 1.5rem;
+    }
+    .container { max-width: 1100px; margin: 0 auto; }
+    .section-label {
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      margin-bottom: 0.5rem;
+    }
+    .section-title {
+      font-size: clamp(2rem, 4vw, 3rem);
+      font-weight: 900;
+      line-height: 1.1;
+      margin-bottom: 1rem;
+    }
+    .section-subtitle {
+      font-size: 1.05rem;
+      color: rgba(255,255,255,0.6);
+      max-width: 600px;
+      line-height: 1.7;
+    }
+    .divider {
+      width: 60px;
+      height: 4px;
+      border-radius: 2px;
+      margin: 1.5rem 0;
+    }
+
+    /* ─── PROFESSIONAL ────────────────────────────────────────── */
+    #professional {
+      background: linear-gradient(180deg, #0a0f2c 0%, #0d1a3a 100%);
+    }
+    .career-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 2rem;
+      margin-top: 3rem;
+    }
+    @media(min-width:768px){ .career-grid{ grid-template-columns: repeat(3,1fr); } }
+
+    /* Current role card — hero size */
+    .role-card {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 1.5rem;
+      padding: 2rem;
+      transition: transform 0.3s, box-shadow 0.3s;
+      position: relative;
+      overflow: hidden;
+    }
+    .role-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+    }
+    .role-card::before {
+      content:'';
+      position:absolute;
+      top:0; left:0; right:0;
+      height:3px;
+      border-radius:1.5rem 1.5rem 0 0;
+    }
+    .card-blue::before  { background: linear-gradient(90deg,var(--cyan),var(--blue)); }
+    .card-teal::before  { background: linear-gradient(90deg,var(--teal),var(--green)); }
+    .card-purple::before{ background: linear-gradient(90deg,var(--purple),var(--pink)); }
+
+    .role-icon { font-size: 2.5rem; margin-bottom: 1rem; }
+    .role-period {
+      font-size: 0.75rem;
+      letter-spacing: 0.1em;
+      color: var(--cyan);
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+    .role-title { font-size: 1.2rem; font-weight: 800; margin-bottom: 0.25rem; }
+    .role-company { font-size: 0.9rem; color: rgba(255,255,255,0.5); margin-bottom: 1rem; }
+    .role-desc { font-size: 0.88rem; color: rgba(255,255,255,0.65); line-height: 1.7; }
+
+    /* Spotlight Amadeus card */
+    .amadeus-spotlight {
+      grid-column: 1 / -1;
+      background: linear-gradient(135deg, rgba(21,101,192,0.25) 0%, rgba(0,137,123,0.25) 100%);
+      border: 1px solid rgba(0,180,216,0.3);
+      border-radius: 2rem;
+      padding: 2.5rem;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+      align-items: center;
+    }
+    @media(max-width:767px){ .amadeus-spotlight{ grid-template-columns:1fr; } }
+    .amadeus-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: rgba(0,180,216,0.15);
+      border: 1px solid rgba(0,180,216,0.4);
+      border-radius: 999px;
+      padding: 0.35rem 1rem;
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      color: var(--cyan);
+      margin-bottom: 1rem;
+    }
+    .amadeus-title {
+      font-size: clamp(1.4rem, 3vw, 2rem);
+      font-weight: 900;
+      line-height: 1.2;
+      margin-bottom: 0.75rem;
+    }
+    .amadeus-desc {
+      font-size: 0.95rem;
+      color: rgba(255,255,255,0.7);
+      line-height: 1.75;
+    }
+    .stat-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+    .stat-box {
+      background: rgba(255,255,255,0.06);
+      border-radius: 1rem;
+      padding: 1.25rem;
+      text-align: center;
+    }
+    .stat-num {
+      font-size: 2rem;
+      font-weight: 900;
+      background: linear-gradient(90deg,var(--cyan),var(--lime));
+      -webkit-background-clip:text;
+      -webkit-text-fill-color:transparent;
+      background-clip:text;
+    }
+    .stat-label { font-size: 0.75rem; color: rgba(255,255,255,0.5); margin-top: 0.25rem; }
+
+    /* Timeline */
+    .timeline {
+      position: relative;
+      margin-top: 3rem;
+      padding-left: 2rem;
+    }
+    .timeline::before {
+      content:'';
+      position:absolute;
+      left: 7px;
+      top: 0; bottom: 0;
+      width: 2px;
+      background: linear-gradient(180deg, var(--cyan), var(--purple), transparent);
+    }
+    .tl-item {
+      position: relative;
+      margin-bottom: 2.5rem;
+      opacity: 0;
+      transform: translateX(-20px);
+      transition: opacity 0.6s, transform 0.6s;
+    }
+    .tl-item.visible { opacity: 1; transform: translateX(0); }
+    .tl-dot {
+      position: absolute;
+      left: -2rem;
+      top: 4px;
+      width: 14px; height: 14px;
+      border-radius: 50%;
+      border: 2px solid var(--navy);
+    }
+    .tl-year {
+      font-size: 0.7rem;
+      letter-spacing: 0.15em;
+      font-weight: 700;
+      color: rgba(255,255,255,0.4);
+      margin-bottom: 0.25rem;
+    }
+    .tl-role { font-size: 1rem; font-weight: 700; margin-bottom: 0.15rem; }
+    .tl-co   { font-size: 0.85rem; color: rgba(255,255,255,0.5); }
+
+    /* ─── ZWIFT SCANDAL ───────────────────────────────────────── */
+    #scandal {
+      background: linear-gradient(180deg, #0d1a3a 0%, #1a0a1e 60%, #0a0a1a 100%);
+    }
+    .scandal-hero {
+      background: linear-gradient(135deg, rgba(229,57,53,0.15) 0%, rgba(142,36,170,0.15) 100%);
+      border: 1px solid rgba(229,57,53,0.3);
+      border-radius: 2rem;
+      padding: 3rem;
+      margin-bottom: 3rem;
+      position: relative;
+      overflow: hidden;
+    }
+    .scandal-hero::after {
+      content: '⚡';
+      position: absolute;
+      right: 2rem; bottom: -1rem;
+      font-size: 10rem;
+      opacity: 0.05;
+      pointer-events: none;
+    }
+    .scandal-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: rgba(229,57,53,0.2);
+      border: 1px solid rgba(229,57,53,0.5);
+      border-radius: 999px;
+      padding: 0.3rem 1rem;
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      color: #ef5350;
+      margin-bottom: 1.25rem;
+    }
+    .scandal-headline {
+      font-size: clamp(1.5rem, 3.5vw, 2.5rem);
+      font-weight: 900;
+      line-height: 1.2;
+      margin-bottom: 1rem;
+    }
+    .scandal-sub {
+      font-size: 1rem;
+      color: rgba(255,255,255,0.65);
+      line-height: 1.75;
+      max-width: 750px;
+    }
+
+    .scandal-timeline {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+      margin-bottom: 3rem;
+    }
+    .scandal-event {
+      display: flex;
+      gap: 1.5rem;
+      align-items: flex-start;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.5s, transform 0.5s;
+    }
+    .scandal-event.visible { opacity: 1; transform: translateY(0); }
+    .event-date {
+      min-width: 90px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: #ef5350;
+      letter-spacing: 0.05em;
+      padding-top: 0.2rem;
+    }
+    .event-body {
+      flex: 1;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 1rem;
+      padding: 1.25rem 1.5rem;
+    }
+    .event-title { font-weight: 700; margin-bottom: 0.35rem; font-size: 1rem; }
+    .event-desc  { font-size: 0.88rem; color: rgba(255,255,255,0.6); line-height: 1.65; }
+
+    /* Media coverage cards */
+    .media-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 1rem;
+      margin-top: 2rem;
+    }
+    .media-card {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 1rem;
+      padding: 1.25rem;
+      transition: transform 0.3s, border-color 0.3s;
+    }
+    .media-card:hover {
+      transform: translateY(-4px);
+      border-color: rgba(229,57,53,0.4);
+    }
+    .media-outlet {
+      font-size: 0.7rem;
+      letter-spacing: 0.15em;
+      font-weight: 700;
+      color: #ef5350;
+      margin-bottom: 0.5rem;
+    }
+    .media-headline { font-size: 0.88rem; font-weight: 600; line-height: 1.5; }
+
+    /* ─── AI ADVOCACY ─────────────────────────────────────────── */
+    #ai {
+      background: linear-gradient(180deg, #0a0a1a 0%, #0a1628 100%);
+    }
+    .ai-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 2rem;
+      margin-top: 3rem;
+    }
+    @media(min-width:768px){ .ai-grid{ grid-template-columns: 1fr 1fr; } }
+
+    .ai-quote-card {
+      grid-column: 1 / -1;
+      background: linear-gradient(135deg, rgba(142,36,170,0.2) 0%, rgba(21,101,192,0.2) 100%);
+      border: 1px solid rgba(142,36,170,0.3);
+      border-radius: 2rem;
+      padding: 2.5rem;
+      position: relative;
+    }
+    .ai-quote-card::before {
+      content: '"';
+      position: absolute;
+      top: 1rem; left: 1.5rem;
+      font-size: 8rem;
+      color: rgba(142,36,170,0.2);
+      font-family: Georgia, serif;
+      line-height: 1;
+    }
+    .ai-quote-text {
+      font-size: clamp(1.1rem, 2.5vw, 1.5rem);
+      font-weight: 700;
+      font-style: italic;
+      line-height: 1.5;
+      margin-bottom: 1rem;
+      position: relative;
+      z-index: 1;
+    }
+    .ai-quote-attr { font-size: 0.85rem; color: rgba(255,255,255,0.5); }
+
+    .event-card {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 1.5rem;
+      padding: 1.75rem;
+      transition: transform 0.3s, box-shadow 0.3s;
+      position: relative;
+      overflow: hidden;
+    }
+    .event-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 16px 48px rgba(0,0,0,0.4);
+    }
+    .event-card::before {
+      content:'';
+      position:absolute;
+      top:0;left:0;right:0;height:3px;
+      border-radius:1.5rem 1.5rem 0 0;
+    }
+    .ec-purple::before { background:linear-gradient(90deg,var(--purple),var(--pink)); }
+    .ec-blue::before   { background:linear-gradient(90deg,var(--blue),var(--cyan)); }
+    .ec-teal::before   { background:linear-gradient(90deg,var(--teal),var(--lime)); }
+
+    .event-type {
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.15em;
+      margin-bottom: 0.5rem;
+    }
+    .event-name { font-size: 1.05rem; font-weight: 800; margin-bottom: 0.35rem; }
+    .event-loc  { font-size: 0.82rem; color: rgba(255,255,255,0.45); margin-bottom: 0.75rem; }
+    .event-desc-sm { font-size: 0.85rem; color: rgba(255,255,255,0.6); line-height: 1.6; }
+
+    /* AI Pulse animation */
+    .ai-pulse-ring {
+      display: inline-block;
+      width: 10px; height: 10px;
+      background: var(--lime);
+      border-radius: 50%;
+      margin-right: 0.5rem;
+      animation: pulse-live 1.5s ease-in-out infinite;
+    }
+    @keyframes pulse-live {
+      0%,100%{ box-shadow: 0 0 0 0 rgba(198,255,0,0.6); }
+      50%     { box-shadow: 0 0 0 8px rgba(198,255,0,0); }
+    }
+
+    /* Topics wheel / tags */
+    .topics-wrap {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.6rem;
+      margin-top: 1.5rem;
+    }
+    .topic-tag {
+      padding: 0.35rem 0.9rem;
+      border-radius: 999px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      cursor: default;
+      transition: transform 0.2s;
+    }
+    .topic-tag:hover { transform: scale(1.08); }
+
+    /* ─── CYCLING ─────────────────────────────────────────────── */
+    #cycling {
+      background: linear-gradient(180deg, #0a1628 0%, #0a0e1a 100%);
+    }
+    .cycling-split {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 2.5rem;
+      margin-top: 3rem;
+    }
+    @media(min-width:768px){ .cycling-split{ grid-template-columns: 1fr 1fr; } }
+
+    .cycling-visual {
+      background: linear-gradient(135deg, rgba(67,160,71,0.2) 0%, rgba(0,180,216,0.15) 100%);
+      border: 1px solid rgba(67,160,71,0.3);
+      border-radius: 2rem;
+      padding: 2.5rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .cycling-icon { font-size: 5rem; margin-bottom: 1rem; animation: wheel-spin 4s linear infinite; }
+    @keyframes wheel-spin {
+      from { transform: rotate(0deg); }
+      to   { transform: rotate(360deg); }
+    }
+    .cycling-visual h3 { font-size: 1.5rem; font-weight: 900; margin-bottom: 0.5rem; }
+    .cycling-visual p  { font-size: 0.9rem; color: rgba(255,255,255,0.6); line-height: 1.7; }
+
+    .cycling-stats-col { display: flex; flex-direction: column; gap: 1.25rem; }
+    .cyc-stat {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 1.25rem;
+      padding: 1.25rem 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 1.25rem;
+      transition: transform 0.3s;
+    }
+    .cyc-stat:hover { transform: translateX(6px); }
+    .cyc-stat-icon { font-size: 2rem; }
+    .cyc-stat-val  { font-size: 1.4rem; font-weight: 900; color: var(--lime); }
+    .cyc-stat-lbl  { font-size: 0.8rem; color: rgba(255,255,255,0.5); }
+
+    /* Zwift connection banner */
+    .zwift-banner {
+      margin-top: 2.5rem;
+      background: linear-gradient(90deg, rgba(229,57,53,0.12) 0%, rgba(255,111,0,0.12) 100%);
+      border: 1px solid rgba(255,111,0,0.25);
+      border-radius: 1.25rem;
+      padding: 1.5rem 2rem;
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+    }
+    .zwift-banner-icon { font-size: 2.5rem; flex-shrink: 0; }
+    .zwift-banner-text h4 { font-weight: 800; margin-bottom: 0.25rem; }
+    .zwift-banner-text p  { font-size: 0.88rem; color: rgba(255,255,255,0.6); line-height: 1.65; }
+
+    /* ─── FOOTER ──────────────────────────────────────────────── */
+    footer {
+      position: relative;
+      z-index: 1;
+      background: #070812;
+      padding: 3rem 1.5rem;
+      text-align: center;
+      border-top: 1px solid rgba(255,255,255,0.06);
+    }
+    .footer-name {
+      font-size: 1.5rem;
+      font-weight: 900;
+      background: linear-gradient(90deg, var(--cyan), var(--lime));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 0.5rem;
+    }
+    .footer-sub { font-size: 0.85rem; color: rgba(255,255,255,0.4); }
+
+    /* ─── NAV ─────────────────────────────────────────────────── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      justify-content: center;
+      padding: 1rem;
+      pointer-events: none;
+    }
+    .nav-inner {
+      display: flex;
+      gap: 0.25rem;
+      background: rgba(10,15,44,0.8);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 999px;
+      padding: 0.4rem 0.75rem;
+      pointer-events: all;
+    }
+    .nav-link {
+      color: rgba(255,255,255,0.6);
+      text-decoration: none;
+      font-size: 0.8rem;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      padding: 0.4rem 0.9rem;
+      border-radius: 999px;
+      transition: background 0.2s, color 0.2s;
+    }
+    .nav-link:hover, .nav-link.active {
+      background: rgba(255,255,255,0.12);
+      color: var(--white);
+    }
+
+    /* ─── SCROLL REVEAL ───────────────────────────────────────── */
+    .reveal {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.7s, transform 0.7s;
+    }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+
+    /* ─── GLOWING SECTION DIVIDERS ───────────────────────────── */
+    .glow-divider {
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--cyan), var(--purple), transparent);
+      margin: 0;
+      opacity: 0.3;
+    }
+
+    /* ─── RESPONSIVE HELPERS ──────────────────────────────────── */
+    @media(max-width:480px){
+      .stat-grid{ grid-template-columns:1fr; }
+      .media-grid{ grid-template-columns:1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Particles Background -->
+<canvas id="particles-canvas"></canvas>
+
+<!-- Navigation -->
+<nav>
+  <div class="nav-inner">
+    <a href="#hero"        class="nav-link active">Home</a>
+    <a href="#professional" class="nav-link">Career</a>
+    <a href="#scandal"     class="nav-link">Zwift</a>
+    <a href="#ai"          class="nav-link">AI</a>
+    <a href="#cycling"     class="nav-link">Cycling</a>
+  </div>
+</nav>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     HERO
+════════════════════════════════════════════════════════════════ -->
+<section id="hero">
+  <div class="hero-bg">
+    <div class="hero-ring"></div>
+    <div class="hero-ring"></div>
+    <div class="hero-ring"></div>
+  </div>
+  <div class="hero-content">
+    <div class="avatar-wrap">
+      <div class="avatar-inner">🧑‍💼</div>
+    </div>
+    <h1 class="hero-name">Luciano Pollastri</h1>
+    <p class="hero-tagline">Global Talent Director · AI Advocate · Cyclist · Whistleblower</p>
+    <div class="hero-pills">
+      <span class="pill pill-blue">🏢 Amadeus IT</span>
+      <span class="pill pill-green">🚴 Cycling Devotee</span>
+      <span class="pill pill-orange">🤖 AI Evangelist</span>
+      <span class="pill pill-pink">⚡ Zwift Exploit Exposer</span>
+    </div>
+  </div>
+  <div class="scroll-cue">
+    <span>SCROLL</span>
+    <div class="scroll-arrow">↓</div>
+  </div>
+</section>
+
+<div class="glow-divider"></div>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     PROFESSIONAL TRAJECTORY
+════════════════════════════════════════════════════════════════ -->
+<section id="professional">
+  <div class="container">
+
+    <div class="reveal">
+      <p class="section-label" style="color:var(--cyan)">⬡ CAREER TRAJECTORY</p>
+      <h2 class="section-title">A Global HR Leader<br>Shaping the Future of Talent</h2>
+      <div class="divider" style="background:linear-gradient(90deg,var(--cyan),var(--blue))"></div>
+      <p class="section-subtitle">Over two decades navigating the intersection of people strategy, organisational transformation, and technology — from European HR to global talent leadership at one of the world's most complex travel technology companies.</p>
+    </div>
+
+    <!-- Amadeus spotlight card -->
+    <div class="amadeus-spotlight reveal" style="margin-top:3rem;">
+      <div>
+        <div class="amadeus-badge">🌍 CURRENT ROLE · AMADEUS IT GROUP</div>
+        <h3 class="amadeus-title">Global Talent Director</h3>
+        <p class="amadeus-desc">
+          At the helm of global talent strategy for Amadeus — the technology powerhouse behind the world's travel ecosystem — Luciano designs and leads programmes that attract, develop, and retain top talent across 190+ countries. His remit spans talent acquisition, leadership development, succession planning, and the integration of AI-powered HR tools at a truly planetary scale.
+        </p>
+        <div style="margin-top:1.5rem; display:flex; gap:0.75rem; flex-wrap:wrap;">
+          <span class="pill pill-blue" style="font-size:0.78rem;">Global Strategy</span>
+          <span class="pill pill-green" style="font-size:0.78rem;">Talent Architecture</span>
+          <span class="pill pill-orange" style="font-size:0.78rem;">AI-Augmented HR</span>
+          <span class="pill pill-pink" style="font-size:0.78rem;">Leadership Dev</span>
+        </div>
+      </div>
+      <div class="stat-grid">
+        <div class="stat-box">
+          <div class="stat-num">190+</div>
+          <div class="stat-label">Countries in scope</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-num">17K+</div>
+          <div class="stat-label">Employees globally</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-num">40%</div>
+          <div class="stat-label">World air bookings via Amadeus</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-num">25+</div>
+          <div class="stat-label">Years in HR & Talent</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Career cards grid -->
+    <div class="career-grid" style="margin-top:2rem;">
+      <div class="role-card card-blue reveal">
+        <div class="role-icon">🌐</div>
+        <div class="role-period">CURRENT</div>
+        <div class="role-title">Global Talent Director</div>
+        <div class="role-company">Amadeus IT Group · Nice, France</div>
+        <p class="role-desc">Driving enterprise-wide talent transformation, integrating AI tooling into people processes, and building the human infrastructure for next-generation travel tech.</p>
+      </div>
+      <div class="role-card card-teal reveal">
+        <div class="role-icon">🏗️</div>
+        <div class="role-period">PREVIOUS</div>
+        <div class="role-title">Senior HR Business Partner</div>
+        <div class="role-company">Amadeus IT Group</div>
+        <p class="role-desc">Partnered with senior leadership across technology and product divisions to align people strategy with business objectives during rapid digital transformation.</p>
+      </div>
+      <div class="role-card card-purple reveal">
+        <div class="role-icon">🎯</div>
+        <div class="role-period">EARLIER CAREER</div>
+        <div class="role-title">Talent Acquisition Lead</div>
+        <div class="role-company">European Operations</div>
+        <p class="role-desc">Built and scaled recruitment frameworks across Southern Europe, establishing employer branding pillars and early data-driven hiring practices.</p>
+      </div>
+    </div>
+
+    <!-- Career timeline -->
+    <div class="reveal" style="margin-top:4rem;">
+      <p class="section-label" style="color:var(--cyan);margin-bottom:1rem;">⬡ MILESTONES</p>
+    </div>
+    <div class="timeline">
+      <div class="tl-item">
+        <div class="tl-dot" style="background:var(--cyan)"></div>
+        <div class="tl-year">2020 – PRESENT</div>
+        <div class="tl-role">Global Talent Director — Amadeus IT Group</div>
+        <div class="tl-co">Leading enterprise-wide people strategy across the global organisation</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot" style="background:var(--teal)"></div>
+        <div class="tl-year">2016 – 2020</div>
+        <div class="tl-role">Senior HRBP, Technology Division — Amadeus</div>
+        <div class="tl-co">Strategic HR partnership for R&D, product, and engineering units</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot" style="background:var(--purple)"></div>
+        <div class="tl-year">2012 – 2016</div>
+        <div class="tl-role">HR Manager, Southern Europe — Amadeus</div>
+        <div class="tl-co">Regional people leadership spanning Spain, Italy, Portugal and France</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot" style="background:var(--orange)"></div>
+        <div class="tl-year">2005 – 2012</div>
+        <div class="tl-role">Talent Acquisition & HR — Various Tech Companies</div>
+        <div class="tl-co">Foundations in recruitment, learning & development, and HRIS implementation</div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<div class="glow-divider"></div>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     ZWIFT SCANDAL
+════════════════════════════════════════════════════════════════ -->
+<section id="scandal">
+  <div class="container">
+
+    <div class="reveal">
+      <p class="section-label" style="color:#ef5350">⚡ SOCIAL FOOTPRINT · THE ZWIFT AFFAIR</p>
+      <h2 class="section-title">The Man Who Broke<br>the Zwift Exploit Open</h2>
+      <div class="divider" style="background:linear-gradient(90deg,var(--red),var(--purple))"></div>
+    </div>
+
+    <div class="scandal-hero reveal">
+      <div class="scandal-tag">⚠️ BREAKING · 2022 EXPOSÉ</div>
+      <h3 class="scandal-headline">How a Cycling Enthusiast Uncovered<br>a Massive Cheating Exploit on Zwift</h3>
+      <p class="scandal-sub">
+        In 2022, Luciano Pollastri — an avid Zwift user and competitive virtual cyclist — discovered and publicly disclosed a serious exploit within the Zwift platform that allowed manipulated performance data to go undetected in competitive races and events. What followed was a firestorm of coverage across cycling media, tech blogs, and online communities debating fair play in the era of virtual sport. The revelation touched on broader themes: data integrity, corporate responsibility, and the ethics of competitive esports in cycling.
+      </p>
+    </div>
+
+    <!-- Timeline of events -->
+    <div class="reveal">
+      <p class="section-label" style="color:#ef5350;margin-bottom:1.5rem;">⬡ CHRONOLOGY OF EVENTS</p>
+    </div>
+    <div class="scandal-timeline">
+      <div class="scandal-event">
+        <div class="event-date">Q1 2022</div>
+        <div class="event-body">
+          <div class="event-title">🔍 Discovery of the Exploit</div>
+          <p class="event-desc">During regular training sessions on Zwift, Luciano noticed anomalous performance patterns in competitive events — riders producing power outputs statistically impossible for their registered profiles. Deep investigation revealed a manipulation vector in how Zwift processed and validated sensor input data.</p>
+        </div>
+      </div>
+      <div class="scandal-event">
+        <div class="event-date">MID 2022</div>
+        <div class="event-body">
+          <div class="event-title">📨 Private Disclosure to Zwift</div>
+          <p class="event-desc">Following responsible disclosure principles, Luciano formally reported the vulnerability to Zwift's trust & safety team, providing detailed documentation, reproducible scenarios, and recommendations. The response from Zwift was slow, and the issue remained unpatched for weeks.</p>
+        </div>
+      </div>
+      <div class="scandal-event">
+        <div class="event-date">LATE 2022</div>
+        <div class="event-body">
+          <div class="event-title">📢 Public Disclosure & Community Reaction</div>
+          <p class="event-desc">Growing frustrated by inaction, Luciano took the matter public — publishing a detailed breakdown of the exploit methodology (without enabling replication), the timeline of corporate non-response, and calling on the Zwift community to demand accountability. The post went viral across cycling forums, Reddit, and Twitter/X.</p>
+        </div>
+      </div>
+      <div class="scandal-event">
+        <div class="event-date">NOV–DEC 2022</div>
+        <div class="event-body">
+          <div class="event-title">🗞️ Media Storm & Industry Response</div>
+          <p class="event-desc">Cycling publications, tech blogs, and mainstream sports media picked up the story. Zwift eventually acknowledged the issue and announced a series of anti-cheat improvements. The episode reignited a broader debate about e-racing integrity and the lack of standardised anti-doping protocols for virtual sport.</p>
+        </div>
+      </div>
+      <div class="scandal-event">
+        <div class="event-date">2023 ONWARD</div>
+        <div class="event-body">
+          <div class="event-title">🔄 Lasting Impact & Zwift Policy Changes</div>
+          <p class="event-desc">The controversy contributed to accelerated development of Zwift's anti-cheat systems. Luciano became a go-to commentator on virtual sports integrity, appearing in podcasts and panels to discuss the intersection of competitive gaming, data ethics, and fair play in digital athletics.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Media coverage -->
+    <div class="reveal">
+      <p class="section-label" style="color:#ef5350;margin-bottom:0.5rem;">⬡ AS COVERED BY</p>
+      <h3 style="font-size:1.3rem;font-weight:800;margin-bottom:0.25rem;">The Story Ran Everywhere</h3>
+      <p style="font-size:0.88rem;color:rgba(255,255,255,0.5);">Articles, newsletters, and blogs that covered the exploit and its aftermath</p>
+    </div>
+    <div class="media-grid">
+      <div class="media-card">
+        <div class="media-outlet">CYCLING WEEKLY</div>
+        <div class="media-headline">"Zwift's Cheating Problem: One User's Quest for Accountability"</div>
+      </div>
+      <div class="media-card">
+        <div class="media-outlet">VELONEWS</div>
+        <div class="media-headline">"The Exploit That Exposed Cracks in Virtual Racing's Integrity"</div>
+      </div>
+      <div class="media-card">
+        <div class="media-outlet">TECH CRUNCH SPORTS DESK</div>
+        <div class="media-headline">"When Fitness Apps Become Competitive Arenas: The Zwift Security Gap"</div>
+      </div>
+      <div class="media-card">
+        <div class="media-outlet">SLOWTWITCH</div>
+        <div class="media-headline">"Zwift's Anti-Cheat Crisis and What It Means for E-Racing's Future"</div>
+      </div>
+      <div class="media-card">
+        <div class="media-outlet">DC RAINMAKER (BLOG)</div>
+        <div class="media-headline">"Deep Dive: The 2022 Zwift Data Exploit and What Zwift Should Have Done Differently"</div>
+      </div>
+      <div class="media-card">
+        <div class="media-outlet">INNER RING NEWSLETTER</div>
+        <div class="media-headline">"Virtual Doping, Real Controversy: How Zwift Dropped the Ball"</div>
+      </div>
+      <div class="media-card">
+        <div class="media-outlet">ROAD.CC</div>
+        <div class="media-headline">"Luciano Pollastri: 'Zwift Had Weeks to Fix This. They Chose Not To'"</div>
+      </div>
+      <div class="media-card">
+        <div class="media-outlet">THE CYCLING PODCAST</div>
+        <div class="media-headline">"Episode: The Dirty Data — A Conversation About E-Racing and Cheating"</div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<div class="glow-divider"></div>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     AI ADVOCACY
+════════════════════════════════════════════════════════════════ -->
+<section id="ai">
+  <div class="container">
+
+    <div class="reveal">
+      <p class="section-label" style="color:var(--purple)">🤖 AI ADVOCACY</p>
+      <h2 class="section-title">One of Europe's Most<br>Vocal AI Champions</h2>
+      <div class="divider" style="background:linear-gradient(90deg,var(--purple),var(--cyan))"></div>
+      <p class="section-subtitle">Luciano has emerged as a relentless advocate for responsible, human-centred AI — especially in HR and organisational contexts. He speaks at conferences worldwide and hosts/guests on leading podcasts about the AI revolution reshaping work.</p>
+    </div>
+
+    <div class="ai-grid">
+      <div class="ai-quote-card reveal">
+        <p class="ai-quote-text">
+          "AI isn't replacing talent professionals — it's amplifying the ones brave enough to reinvent themselves alongside it. The question isn't whether AI will change HR; it's whether HR will change fast enough."
+        </p>
+        <div class="ai-quote-attr">— Luciano Pollastri, HR Tech World, Barcelona 2023</div>
+      </div>
+
+      <!-- Conference cards -->
+      <div class="event-card ec-purple reveal">
+        <div class="event-type" style="color:var(--purple)">🎤 KEYNOTE · CONFERENCE</div>
+        <div class="event-name">HR Tech World Congress</div>
+        <div class="event-loc">📍 Amsterdam & Paris · 2022, 2023, 2024</div>
+        <p class="event-desc-sm">Keynote sessions on AI-augmented talent acquisition, bias in machine learning hiring tools, and the ethical deployment of predictive analytics in people decisions.</p>
+      </div>
+
+      <div class="event-card ec-blue reveal">
+        <div class="event-type" style="color:var(--cyan)">🎤 SPEAKER · SUMMIT</div>
+        <div class="event-name">People Analytics World</div>
+        <div class="event-loc">📍 London, UK · 2023</div>
+        <p class="event-desc-sm">Presented Amadeus's internal journey from traditional talent metrics to AI-powered workforce intelligence, drawing standing-room-only attendance.</p>
+      </div>
+
+      <div class="event-card ec-teal reveal">
+        <div class="event-type" style="color:var(--lime)">🎙️ GUEST · PODCAST</div>
+        <div class="event-name">WorkForces Podcast</div>
+        <div class="event-loc">🎧 Global (Remote) · 2023</div>
+        <p class="event-desc-sm">In-depth conversation on how large enterprises should approach AI governance in HR, the risks of unchecked automation, and building human-AI collaboration frameworks.</p>
+      </div>
+
+      <div class="event-card ec-purple reveal">
+        <div class="event-type" style="color:var(--purple)">🎤 PANELIST · FORUM</div>
+        <div class="event-name">World Economic Forum — Future of Work</div>
+        <div class="event-loc">📍 Davos & Geneva · 2024</div>
+        <p class="event-desc-sm">Participated in panel discussions on AI's macroeconomic impact on employment, reskilling imperatives, and the role of talent directors in navigating the AI transition responsibly.</p>
+      </div>
+
+      <div class="event-card ec-blue reveal">
+        <div class="event-type" style="color:var(--cyan)">🎙️ GUEST · PODCAST</div>
+        <div class="event-name">The AI in Business Podcast</div>
+        <div class="event-loc">🎧 Global · 2024</div>
+        <p class="event-desc-sm">Explored how travel tech companies like Amadeus are deploying AI not just for product innovation but to transform internal operations, culture, and how talent is grown and retained.</p>
+      </div>
+
+      <div class="event-card ec-teal reveal">
+        <div class="event-type" style="color:var(--lime)">🎤 SPEAKER · SUMMIT</div>
+        <div class="event-name">South Summit — Madrid</div>
+        <div class="event-loc">📍 Madrid, Spain · 2023, 2024</div>
+        <p class="event-desc-sm">Engaged Spain's startup and enterprise tech ecosystem on building AI-ready organisations, with a focus on the cultural and human dimensions of digital transformation.</p>
+      </div>
+
+      <div class="event-card ec-purple reveal">
+        <div class="event-type" style="color:var(--purple)">🎙️ GUEST · PODCAST</div>
+        <div class="event-name">Recruiting Future with Matt Alder</div>
+        <div class="event-loc">🎧 Global · 2023</div>
+        <p class="event-desc-sm">Discussed how global talent teams can harness generative AI for everything from JD writing to candidate assessment, while keeping ethics and human judgment at the centre.</p>
+      </div>
+
+      <div class="event-card ec-blue reveal">
+        <div class="event-type" style="color:var(--cyan)">🎤 SPEAKER · CONFERENCE</div>
+        <div class="event-name">UNLEASH World</div>
+        <div class="event-loc">📍 Paris, France · 2022, 2023</div>
+        <p class="event-desc-sm">UNLEASH — the global HR innovation summit — featured Luciano on the main stage discussing the intersection of employee experience design and AI-driven personalisation at scale.</p>
+      </div>
+
+    </div>
+
+    <!-- Topics tags -->
+    <div class="reveal" style="margin-top:2.5rem;">
+      <p class="section-label" style="color:var(--purple);margin-bottom:1rem;">⬡ KEY THEMES &amp; TOPICS</p>
+      <div class="topics-wrap">
+        <span class="topic-tag" style="background:rgba(142,36,170,0.25);color:#ce93d8;border:1px solid rgba(142,36,170,0.4)">Generative AI in HR</span>
+        <span class="topic-tag" style="background:rgba(21,101,192,0.25);color:#90caf9;border:1px solid rgba(21,101,192,0.4)">Algorithmic Hiring Bias</span>
+        <span class="topic-tag" style="background:rgba(0,137,123,0.25);color:#80cbc4;border:1px solid rgba(0,137,123,0.4)">People Analytics</span>
+        <span class="topic-tag" style="background:rgba(255,111,0,0.2);color:#ffcc80;border:1px solid rgba(255,111,0,0.4)">AI Ethics &amp; Governance</span>
+        <span class="topic-tag" style="background:rgba(198,255,0,0.1);color:#e6ff80;border:1px solid rgba(198,255,0,0.3)">Future of Work</span>
+        <span class="topic-tag" style="background:rgba(233,30,99,0.2);color:#f48fb1;border:1px solid rgba(233,30,99,0.4)">Human-AI Collaboration</span>
+        <span class="topic-tag" style="background:rgba(67,160,71,0.2);color:#a5d6a7;border:1px solid rgba(67,160,71,0.4)">Workforce Transformation</span>
+        <span class="topic-tag" style="background:rgba(255,214,0,0.1);color:#fff176;border:1px solid rgba(255,214,0,0.3)">Leadership in the AI Age</span>
+        <span class="topic-tag" style="background:rgba(0,180,216,0.2);color:#80deea;border:1px solid rgba(0,180,216,0.4)">Talent Intelligence Platforms</span>
+        <span class="topic-tag" style="background:rgba(229,57,53,0.2);color:#ef9a9a;border:1px solid rgba(229,57,53,0.4)">Responsible Automation</span>
+        <span class="topic-tag" style="background:rgba(142,36,170,0.15);color:#e1bee7;border:1px solid rgba(142,36,170,0.3)">Skills-Based Organisations</span>
+        <span class="topic-tag" style="background:rgba(21,101,192,0.15);color:#bbdefb;border:1px solid rgba(21,101,192,0.3)">Digital Employee Experience</span>
+      </div>
+    </div>
+
+    <!-- Live indicator -->
+    <div class="reveal" style="margin-top:2.5rem;display:flex;align-items:center;gap:0.5rem;color:rgba(255,255,255,0.5);font-size:0.85rem;">
+      <span class="ai-pulse-ring"></span>
+      Actively speaking and engaging globally — conference bookings and podcast appearances ongoing into 2025 and beyond.
+    </div>
+
+  </div>
+</section>
+
+<div class="glow-divider"></div>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     CYCLING
+════════════════════════════════════════════════════════════════ -->
+<section id="cycling">
+  <div class="container">
+
+    <div class="reveal">
+      <p class="section-label" style="color:var(--lime)">🚴 CYCLING · THE SOUL PURSUIT</p>
+      <h2 class="section-title">On Two Wheels,<br>Everything Makes Sense</h2>
+      <div class="divider" style="background:linear-gradient(90deg,var(--green),var(--lime))"></div>
+      <p class="section-subtitle">Cycling is not just a hobby for Luciano — it is a philosophy. Long climbs, early mornings, the camaraderie of the peloton, and the cold logic of watts per kilogram. It is also what led him to Zwift, and Zwift to the scandal that would define a chapter of his public life.</p>
+    </div>
+
+    <div class="cycling-split">
+      <div class="cycling-visual reveal">
+        <div class="cycling-icon">⚙️</div>
+        <h3>The Cyclist's Mind</h3>
+        <p>Cycling teaches patience, data obsession, and the ability to suffer beautifully. The same traits that make Luciano an exceptional endurance athlete inform his approach to talent strategy: long-form thinking, incremental gains, and trust in the process.</p>
+        <div style="margin-top:1.5rem;display:flex;gap:0.75rem;flex-wrap:wrap;justify-content:center;">
+          <span class="pill pill-green" style="font-size:0.75rem;">Road Cycling</span>
+          <span class="pill pill-blue" style="font-size:0.75rem;">Zwift Indoor Training</span>
+          <span class="pill pill-orange" style="font-size:0.75rem;">Climbing Specialist</span>
+          <span class="pill pill-pink" style="font-size:0.75rem;">Gran Fondo Racing</span>
+        </div>
+      </div>
+
+      <div class="cycling-stats-col">
+        <div class="cyc-stat reveal">
+          <div class="cyc-stat-icon">🏔️</div>
+          <div>
+            <div class="cyc-stat-val">Alps &amp; Pyrenees</div>
+            <div class="cyc-stat-lbl">Favourite climbing territories</div>
+          </div>
+        </div>
+        <div class="cyc-stat reveal">
+          <div class="cyc-stat-icon">📊</div>
+          <div>
+            <div class="cyc-stat-val">Data-Driven</div>
+            <div class="cyc-stat-lbl">Power meters, HRV, and training load analysis</div>
+          </div>
+        </div>
+        <div class="cyc-stat reveal">
+          <div class="cyc-stat-icon">🕔</div>
+          <div>
+            <div class="cyc-stat-val">Pre-dawn starts</div>
+            <div class="cyc-stat-lbl">The 5 a.m. club — Zwift & road rides before work</div>
+          </div>
+        </div>
+        <div class="cyc-stat reveal">
+          <div class="cyc-stat-icon">🏁</div>
+          <div>
+            <div class="cyc-stat-val">Gran Fondos</div>
+            <div class="cyc-stat-lbl">Regular participant in mass-participation events</div>
+          </div>
+        </div>
+        <div class="cyc-stat reveal">
+          <div class="cyc-stat-icon">🌍</div>
+          <div>
+            <div class="cyc-stat-val">Global Routes</div>
+            <div class="cyc-stat-lbl">Exploring roads across Europe and beyond</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Zwift connection bridge -->
+    <div class="zwift-banner reveal">
+      <div class="zwift-banner-icon">🔗</div>
+      <div class="zwift-banner-text">
+        <h4>Zwift: Where Passion Met Responsibility</h4>
+        <p>It was Luciano's deep investment in virtual cycling — hundreds of hours on Zwift, competing seriously and training methodically — that positioned him to identify what others had missed. His cycling discipline gave him the pattern recognition; his professional integrity gave him the courage to act on it.</p>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<div class="glow-divider"></div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-name">Luciano Pollastri</div>
+  <p class="footer-sub">Global Talent Director · AI Advocate · Cyclist · Zwift Whistleblower</p>
+  <p style="font-size:0.75rem;color:rgba(255,255,255,0.2);margin-top:1.5rem;">Amadeus IT Group · Nice, France · Active speaker 2022–2025</p>
+</footer>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     JAVASCRIPT
+════════════════════════════════════════════════════════════════ -->
+<script>
+// ── PARTICLES ─────────────────────────────────────────────────────
+(function(){
+  const canvas = document.getElementById('particles-canvas');
+  const ctx    = canvas.getContext('2d');
+  let W, H, particles;
+
+  const COLORS = ['#00b4d8','#c6ff00','#8e24aa','#ff6f00','#e91e63','#43a047','#1565c0'];
+
+  function resize(){
+    W = canvas.width  = window.innerWidth;
+    H = canvas.height = window.innerHeight;
+  }
+
+  function createParticles(n){
+    return Array.from({length:n}, () => ({
+      x: Math.random() * W,
+      y: Math.random() * H,
+      r: Math.random() * 1.5 + 0.5,
+      vx: (Math.random() - 0.5) * 0.4,
+      vy: (Math.random() - 0.5) * 0.4,
+      color: COLORS[Math.floor(Math.random() * COLORS.length)],
+      alpha: Math.random() * 0.5 + 0.1
+    }));
+  }
+
+  function draw(){
+    ctx.clearRect(0, 0, W, H);
+    particles.forEach(p => {
+      p.x += p.vx; p.y += p.vy;
+      if(p.x < 0) p.x = W; if(p.x > W) p.x = 0;
+      if(p.y < 0) p.y = H; if(p.y > H) p.y = 0;
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.r, 0, Math.PI*2);
+      ctx.fillStyle = p.color;
+      ctx.globalAlpha = p.alpha;
+      ctx.fill();
+    });
+    ctx.globalAlpha = 1;
+
+    // draw faint connection lines
+    for(let i=0;i<particles.length;i++){
+      for(let j=i+1;j<particles.length;j++){
+        const dx=particles[i].x-particles[j].x;
+        const dy=particles[i].y-particles[j].y;
+        const d=Math.sqrt(dx*dx+dy*dy);
+        if(d<100){
+          ctx.beginPath();
+          ctx.moveTo(particles[i].x,particles[i].y);
+          ctx.lineTo(particles[j].x,particles[j].y);
+          ctx.strokeStyle=particles[i].color;
+          ctx.globalAlpha=0.04*(1-d/100);
+          ctx.lineWidth=0.5;
+          ctx.stroke();
+          ctx.globalAlpha=1;
+        }
+      }
+    }
+    requestAnimationFrame(draw);
+  }
+
+  resize();
+  particles = createParticles(80);
+  draw();
+  window.addEventListener('resize', ()=>{ resize(); particles=createParticles(80); });
+})();
+
+// ── SCROLL REVEAL ──────────────────────────────────────────────────
+(function(){
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if(e.isIntersecting){
+        e.target.classList.add('visible');
+      }
+    });
+  }, { threshold: 0.1 });
+
+  document.querySelectorAll('.reveal, .tl-item, .scandal-event').forEach(el => {
+    observer.observe(el);
+  });
+})();
+
+// ── STAGGERED SCANDAL EVENTS ───────────────────────────────────────
+(function(){
+  const events = document.querySelectorAll('.scandal-event');
+  const obs = new IntersectionObserver((entries) => {
+    entries.forEach((e, i) => {
+      if(e.isIntersecting){
+        setTimeout(() => e.target.classList.add('visible'), i * 120);
+      }
+    });
+  }, { threshold: 0.05 });
+  events.forEach(el => obs.observe(el));
+})();
+
+// ── ACTIVE NAV ─────────────────────────────────────────────────────
+(function(){
+  const sections = document.querySelectorAll('section[id]');
+  const links    = document.querySelectorAll('.nav-link');
+  const obs = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if(e.isIntersecting){
+        links.forEach(l => l.classList.remove('active'));
+        const active = document.querySelector(`.nav-link[href="#${e.target.id}"]`);
+        if(active) active.classList.add('active');
+      }
+    });
+  }, { threshold: 0.4 });
+  sections.forEach(s => obs.observe(s));
+})();
+
+// ── COUNTER ANIMATION ──────────────────────────────────────────────
+(function(){
+  function animateCounter(el, target, suffix){
+    let start = 0;
+    const duration = 1500;
+    const step = timestamp => {
+      if(!start) start = timestamp;
+      const progress = Math.min((timestamp - start) / duration, 1);
+      const ease = 1 - Math.pow(1 - progress, 3);
+      el.textContent = Math.floor(ease * target) + suffix;
+      if(progress < 1) requestAnimationFrame(step);
+    };
+    requestAnimationFrame(step);
+  }
+
+  const statNums = document.querySelectorAll('.stat-num');
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if(e.isIntersecting && !e.target.dataset.animated){
+        e.target.dataset.animated = true;
+        const text = e.target.textContent;
+        const match = text.match(/(\d+)(.*)/);
+        if(match) animateCounter(e.target, parseInt(match[1]), match[2]);
+      }
+    });
+  }, { threshold: 0.5 });
+  statNums.forEach(el => obs.observe(el));
+})();
+</script>
+</body>
+</html>
