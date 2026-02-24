@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Amadeus IT Group — Executive Committee</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --blue-deep:  #003087;
+      --blue-mid:   #0070C0;
+      --blue-light: #E8F4FF;
+      --gold:       #F5A623;
+      --text:       #1A1A2E;
+      --muted:      #5A6475;
+      --bg:         #F0F4F9;
+      --card-bg:    #FFFFFF;
+      --radius:     12px;
+      --shadow:     0 4px 24px rgba(0,48,135,0.10);
+    }
+
+    body {
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    /* ── Header ─────────────────────────────────────── */
+    header {
+      background: linear-gradient(135deg, var(--blue-deep) 0%, #001f5e 100%);
+      color: #fff;
+      text-align: center;
+      padding: 60px 24px 50px;
+      position: relative;
+      overflow: hidden;
+    }
+    header::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100'%3E%3Ccircle cx='50' cy='50' r='40' fill='none' stroke='rgba(255,255,255,0.05)' stroke-width='1'/%3E%3C/svg%3E") repeat;
+      opacity: 0.4;
+    }
+    .logo-wrap {
+      display: inline-flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 20px;
+      position: relative;
+    }
+    .logo-mark {
+      width: 52px;
+      height: 52px;
+      background: #fff;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .logo-mark svg { width: 38px; height: 38px; }
+    .logo-name {
+      font-size: 26px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      color: #fff;
+    }
+    header h1 {
+      font-size: clamp(28px, 5vw, 44px);
+      font-weight: 700;
+      letter-spacing: -0.5px;
+      margin-bottom: 12px;
+      position: relative;
+    }
+    header p.subtitle {
+      font-size: 17px;
+      color: rgba(255,255,255,0.75);
+      max-width: 580px;
+      margin: 0 auto;
+      position: relative;
+    }
+    .header-divider {
+      width: 60px;
+      height: 4px;
+      background: var(--gold);
+      border-radius: 2px;
+      margin: 20px auto 0;
+      position: relative;
+    }
+
+    /* ── Section intro ───────────────────────────────── */
+    .section-intro {
+      text-align: center;
+      padding: 48px 24px 16px;
+      max-width: 700px;
+      margin: 0 auto;
+    }
+    .section-intro h2 {
+      font-size: 22px;
+      color: var(--blue-deep);
+      font-weight: 600;
+      margin-bottom: 10px;
+    }
+    .section-intro p {
+      color: var(--muted);
+      font-size: 15px;
+    }
+
+    /* ── Grid ────────────────────────────────────────── */
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+      gap: 28px;
+      max-width: 1200px;
+      margin: 32px auto 64px;
+      padding: 0 24px;
+    }
+
+    /* ── Card ────────────────────────────────────────── */
+    .card {
+      background: var(--card-bg);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      transition: transform 0.25s ease, box-shadow 0.25s ease;
+      display: flex;
+      flex-direction: column;
+    }
+    .card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 12px 36px rgba(0,48,135,0.16);
+    }
+
+    .card-header {
+      background: linear-gradient(135deg, var(--blue-deep), var(--blue-mid));
+      padding: 32px 20px 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 14px;
+    }
+    .photo-ring {
+      width: 108px;
+      height: 108px;
+      border-radius: 50%;
+      padding: 3px;
+      background: linear-gradient(135deg, var(--gold), #fff);
+      flex-shrink: 0;
+    }
+    .photo-ring img {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      object-fit: cover;
+      display: block;
+      background: #ccd8ec;
+    }
+    .card-header-text { text-align: center; color: #fff; }
+    .card-header-text h3 {
+      font-size: 17px;
+      font-weight: 700;
+      line-height: 1.3;
+      margin-bottom: 4px;
+    }
+    .card-header-text .role {
+      font-size: 12.5px;
+      color: rgba(255,255,255,0.80);
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+      font-weight: 500;
+    }
+
+    .card-body {
+      padding: 20px 22px 24px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .card-body p {
+      font-size: 14px;
+      color: var(--muted);
+      line-height: 1.65;
+    }
+    .tag-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 4px;
+    }
+    .tag {
+      background: var(--blue-light);
+      color: var(--blue-deep);
+      font-size: 11.5px;
+      font-weight: 600;
+      padding: 3px 10px;
+      border-radius: 20px;
+      letter-spacing: 0.2px;
+    }
+
+    /* ── Footer ──────────────────────────────────────── */
+    footer {
+      background: var(--blue-deep);
+      color: rgba(255,255,255,0.6);
+      text-align: center;
+      padding: 28px 24px;
+      font-size: 13px;
+    }
+    footer a { color: var(--gold); text-decoration: none; }
+    footer a:hover { text-decoration: underline; }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="logo-wrap">
+    <div class="logo-mark">
+      <!-- Amadeus-style "A" mark -->
+      <svg viewBox="0 0 38 38" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M19 4L34 32H4L19 4Z" fill="#003087"/>
+        <path d="M19 10L29 30H9L19 10Z" fill="#0070C0"/>
+        <path d="M19 17L24 28H14L19 17Z" fill="#E8F4FF"/>
+      </svg>
+    </div>
+    <span class="logo-name">amadeus</span>
+  </div>
+  <h1>Executive Committee</h1>
+  <p class="subtitle">The senior leadership team steering Amadeus IT Group's global strategy and operations</p>
+  <div class="header-divider"></div>
+</header>
+
+<div class="section-intro">
+  <h2>Meet Our Executive Leaders</h2>
+  <p>Amadeus IT Group's Executive Committee brings together diverse expertise across technology, finance, travel, hospitality, and corporate affairs to drive innovation across more than 190 countries.</p>
+</div>
+
+<div class="grid">
+
+  <!-- 1. Luis Maroto Camino -->
+  <div class="card">
+    <div class="card-header">
+      <div class="photo-ring">
+        <img
+          src="https://ui-avatars.com/api/?name=Luis+Maroto&size=200&background=003087&color=ffffff&bold=true&length=2"
+          alt="Luis Maroto Camino"
+          onerror="this.style.background='#003087'"
+        />
+      </div>
+      <div class="card-header-text">
+        <h3>Luis Maroto Camino</h3>
+        <div class="role">President &amp; Chief Executive Officer</div>
+      </div>
+    </div>
+    <div class="card-body">
+      <p>CEO of Amadeus since January 2011, Luis has led the company through two decades of global expansion in travel technology. He previously served as Deputy CEO (2009–2010) and CFO (2003–2009), making him one of the most tenured leaders in the travel-tech industry.</p>
+      <div class="tag-list">
+        <span class="tag">CEO</span>
+        <span class="tag">Strategy</span>
+        <span class="tag">Since 2003</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2. Carol Borg -->
+  <div class="card">
+    <div class="card-header">
+      <div class="photo-ring">
+        <img
+          src="https://ui-avatars.com/api/?name=Carol+Borg&size=200&background=003087&color=ffffff&bold=true&length=2"
+          alt="Carol Borg"
+          onerror="this.style.background='#003087'"
+        />
+      </div>
+      <div class="card-header-text">
+        <h3>Carol Borg</h3>
+        <div class="role">SVP &amp; Chief Financial Officer</div>
+      </div>
+    </div>
+    <div class="card-body">
+      <p>Carol joined Amadeus as CFO in May 2025, bringing extensive financial leadership experience. She previously served as CFO at QinetiQ Group PLC and Lightsource bp, and brings a strong track record in international finance and capital markets.</p>
+      <div class="tag-list">
+        <span class="tag">CFO</span>
+        <span class="tag">Finance</span>
+        <span class="tag">Since 2025</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3. Sylvain Roy -->
+  <div class="card">
+    <div class="card-header">
+      <div class="photo-ring">
+        <img
+          src="https://ui-avatars.com/api/?name=Sylvain+Roy&size=200&background=003087&color=ffffff&bold=true&length=2"
+          alt="Sylvain Roy"
+          onerror="this.style.background='#003087'"
+        />
+      </div>
+      <div class="card-header-text">
+        <h3>Sylvain Roy</h3>
+        <div class="role">SVP &amp; Chief Technology Officer</div>
+      </div>
+    </div>
+    <div class="card-body">
+      <p>CTO since January 2023 and President of Amadeus France, Sylvain leads Amadeus' technology strategy and a global engineering community of over 10,000 people across 50+ sites. He began his Amadeus journey in 2003 as a C++ programmer and studied mathematics and computer science at the École Polytechnique, Paris.</p>
+      <div class="tag-list">
+        <span class="tag">CTO</span>
+        <span class="tag">Engineering</span>
+        <span class="tag">Cloud &amp; AI</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 4. Ana Doval de las Heras -->
+  <div class="card">
+    <div class="card-header">
+      <div class="photo-ring">
+        <img
+          src="https://ui-avatars.com/api/?name=Ana+Doval&size=200&background=003087&color=ffffff&bold=true&length=2"
+          alt="Ana Doval de las Heras"
+          onerror="this.style.background='#003087'"
+        />
+      </div>
+      <div class="card-header-text">
+        <h3>Ana Doval de las Heras</h3>
+        <div class="role">SVP, People, Culture, Communication &amp; Brand</div>
+      </div>
+    </div>
+    <div class="card-body">
+      <p>Ana joined Amadeus in 2022 as the company's Chief Human Resources Officer, overseeing people strategy, culture, internal communications, and brand. She champions Amadeus' commitment to diversity, inclusion, and employee development across its global workforce.</p>
+      <div class="tag-list">
+        <span class="tag">CHRO</span>
+        <span class="tag">People &amp; Culture</span>
+        <span class="tag">Since 2022</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 5. Decius Valmorbida -->
+  <div class="card">
+    <div class="card-header">
+      <div class="photo-ring">
+        <img
+          src="https://ui-avatars.com/api/?name=Decius+Valmorbida&size=200&background=003087&color=ffffff&bold=true&length=2"
+          alt="Decius Valmorbida"
+          onerror="this.style.background='#003087'"
+        />
+      </div>
+      <div class="card-header-text">
+        <h3>Decius Valmorbida</h3>
+        <div class="role">SVP &amp; President, Travel Unit</div>
+      </div>
+    </div>
+    <div class="card-body">
+      <p>President of the Travel Unit since August 2020 and Executive Committee member since 2017, Decius leads the Airlines, Travel Channels, and Airports businesses. He steers Amadeus' platform-led approach to serve travel sellers and airlines around the world.</p>
+      <div class="tag-list">
+        <span class="tag">Travel Unit</span>
+        <span class="tag">Airlines</span>
+        <span class="tag">Since 2017</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 6. Paco Pérez-Lozao Rüter -->
+  <div class="card">
+    <div class="card-header">
+      <div class="photo-ring">
+        <img
+          src="https://ui-avatars.com/api/?name=Paco+Perez-Lozao&size=200&background=003087&color=ffffff&bold=true&length=2"
+          alt="Francisco Pérez-Lozao Rüter"
+          onerror="this.style.background='#003087'"
+        />
+      </div>
+      <div class="card-header-text">
+        <h3>Francisco "Paco" Pérez-Lozao Rüter</h3>
+        <div class="role">SVP &amp; President, Hospitality</div>
+      </div>
+    </div>
+    <div class="card-body">
+      <p>Paco leads Amadeus' Hospitality business unit, overseeing approximately 3,000 employees and operations spanning 170 countries. Under his leadership, Amadeus has become a major provider of technology solutions for hotels, property management, and the broader hospitality ecosystem.</p>
+      <div class="tag-list">
+        <span class="tag">Hospitality</span>
+        <span class="tag">Hotels</span>
+        <span class="tag">170 Countries</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 7. Jackson Pek -->
+  <div class="card">
+    <div class="card-header">
+      <div class="photo-ring">
+        <img
+          src="https://ui-avatars.com/api/?name=Jackson+Pek&size=200&background=003087&color=ffffff&bold=true&length=2"
+          alt="Jackson Pek"
+          onerror="this.style.background='#003087'"
+        />
+      </div>
+      <div class="card-header-text">
+        <h3>Jackson Pek</h3>
+        <div class="role">SVP &amp; Chief Corporate and Legal Affairs Officer</div>
+      </div>
+    </div>
+    <div class="card-body">
+      <p>SVP &amp; General Counsel since 2022, Jackson first joined Amadeus in 2006 and served as General Counsel for Asia Pacific for 12 years. After a stint as Chief Legal Officer at AirAsia Group, he returned to Amadeus in 2020 and now oversees all legal, regulatory, and corporate affairs globally.</p>
+      <div class="tag-list">
+        <span class="tag">General Counsel</span>
+        <span class="tag">Legal</span>
+        <span class="tag">Corporate Affairs</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 8. Rongrong Hu -->
+  <div class="card">
+    <div class="card-header">
+      <div class="photo-ring">
+        <img
+          src="https://ui-avatars.com/api/?name=Rongrong+Hu&size=200&background=003087&color=ffffff&bold=true&length=2"
+          alt="Rongrong Hu"
+          onerror="this.style.background='#003087'"
+        />
+      </div>
+      <div class="card-header-text">
+        <h3>Rongrong "Vvivi" Hu</h3>
+        <div class="role">SVP, Corporate Strategy</div>
+      </div>
+    </div>
+    <div class="card-body">
+      <p>Rongrong joined the Executive Committee effective January 2026 as SVP of Corporate Strategy. She brings extensive international experience in strategy, planning, and innovation across multiple geographies, and reports directly to the President &amp; CEO.</p>
+      <div class="tag-list">
+        <span class="tag">Strategy</span>
+        <span class="tag">Innovation</span>
+        <span class="tag">Since 2026</span>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<footer>
+  <p>
+    &copy; 2026 Amadeus IT Group, S.A. &nbsp;|&nbsp;
+    Source: <a href="https://amadeus.com/en/about/leadership" target="_blank" rel="noopener">amadeus.com/en/about/leadership</a>
+    &nbsp;&amp;&nbsp;
+    <a href="https://corporate.amadeus.com/en/about-us/top-management" target="_blank" rel="noopener">corporate.amadeus.com</a>
+  </p>
+</footer>
+
+</body>
+</html>
