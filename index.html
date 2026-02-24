@@ -1,0 +1,716 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Boulder Dash</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: #111;
+    color: #eee;
+    font-family: 'Courier New', monospace;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
+    padding: 10px;
+  }
+  h1 {
+    font-size: 2rem;
+    color: #f5c518;
+    text-shadow: 0 0 10px #f5c518;
+    margin: 8px 0 4px;
+    letter-spacing: 4px;
+  }
+  #hud {
+    display: flex;
+    gap: 30px;
+    margin: 6px 0;
+    font-size: 1rem;
+    color: #ccc;
+  }
+  #hud span { color: #f5c518; font-weight: bold; }
+  #msg {
+    height: 22px;
+    font-size: 1rem;
+    color: #f5c518;
+    margin-bottom: 4px;
+    letter-spacing: 2px;
+    font-weight: bold;
+  }
+  canvas {
+    display: block;
+    border: 3px solid #444;
+    image-rendering: pixelated;
+  }
+  #controls {
+    margin-top: 10px;
+    font-size: 0.75rem;
+    color: #666;
+    text-align: center;
+    line-height: 1.8;
+  }
+  #controls b { color: #aaa; }
+  #restart-btn {
+    display: none;
+    margin-top: 10px;
+    padding: 8px 24px;
+    background: #f5c518;
+    color: #111;
+    border: none;
+    font-family: inherit;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    letter-spacing: 2px;
+  }
+  #restart-btn:hover { background: #ffd740; }
+</style>
+</head>
+<body>
+<h1>BOULDER DASH</h1>
+<div id="hud">
+  <div>SCORE: <span id="score">0</span></div>
+  <div>DIAMONDS: <span id="diamonds">0</span>/<span id="needed">0</span></div>
+  <div>LIVES: <span id="lives">3</span></div>
+  <div>LEVEL: <span id="level">1</span></div>
+  <div>TIME: <span id="timer">150</span></div>
+</div>
+<div id="msg"></div>
+<canvas id="c"></canvas>
+<button id="restart-btn" onclick="startLevel(currentLevel)">RESTART</button>
+<div id="controls">
+  <b>Arrow Keys / WASD</b> — Move &amp; dig &nbsp;|&nbsp; <b>R</b> — Restart level<br>
+  Collect all diamonds, then reach the exit. Avoid falling boulders!
+</div>
+
+<script>
+// ─── CONSTANTS ──────────────────────────────────────────────────────────────
+const T = 24; // tile size px
+const COLS = 32, ROWS = 22;
+
+const EMPTY  = 0;
+const DIRT   = 1;
+const WALL   = 2;
+const BOULDER= 3;
+const DIAMOND= 4;
+const PLAYER = 5;
+const EXIT   = 6;
+const ENEMY  = 7;   // butterfly / amoeba simple enemy
+const EXPLODE= 8;   // explosion frame 1
+const EXPLODE2=9;   // explosion frame 2
+const STEEL  = 10;  // indestructible wall
+
+// ─── STATE ──────────────────────────────────────────────────────────────────
+let grid, px, py, score, lives, diamondsCollected, diamondsNeeded;
+let gameOver, levelComplete, won;
+let currentLevel = 1;
+let timeLeft, timerInterval;
+let physicsTimer = 0;
+let PHYSICS_RATE = 120; // ms between physics ticks
+let lastPhysics = 0;
+let animFrame = 0;
+let animTimer = 0;
+let enemies = [];
+let explosions = []; // {x,y,frame,timer}
+let playerDead = false;
+let playerDeadTimer = 0;
+let exitOpen = false;
+let inputQueue = [];
+
+const canvas = document.getElementById('c');
+const ctx = canvas.getContext('2d');
+canvas.width  = COLS * T;
+canvas.height = ROWS * T;
+
+// ─── LEVELS ─────────────────────────────────────────────────────────────────
+// Each level: {map: string (. dirt, # wall, S steel, B boulder, D diamond, P player, E exit, M enemy), diamonds: needed, time}
+// Map is ROWS lines of COLS chars, compressed as array of strings auto-padded with dirt
+
+function buildLevel(n) {
+  const maps = [
+    // Level 1
+    {
+      needed: 8, time: 150,
+      rows: [
+        "################################",
+        "#P.............................#",
+        "#......BBB.....................#",
+        "#.....DDDDD....................#",
+        "#.....D...D....................#",
+        "#...BB.....BB..................#",
+        "#..........D...................#",
+        "#.....D....D.......BBB.........#",
+        "#..D.......D.....BB.D.BB.......#",
+        "#..D..BBB..D.....B.DDD.B.......#",
+        "#..D.......D.....BB...BB.......#",
+        "#.....D....D...................#",
+        "#.....DDDD.....................#",
+        "#...................D...........#",
+        "#................BBBBB.........#",
+        "#...............B.DDD.B........#",
+        "#...............BBBBB..........#",
+        "#..................................#",
+        "#...............................E#",
+        "#...............................##",
+        "################################",
+        "################################",
+      ]
+    },
+    // Level 2
+    {
+      needed: 12, time: 180,
+      rows: [
+        "################################",
+        "#P.....B.......B...............#",
+        "#......B.......B...............#",
+        "#DDDDDDB.......BDDDDDDD........#",
+        "#......B.......B...............#",
+        "#......B...B...B...............#",
+        "#......BBB.B.BBB...............#",
+        "#..........B...................#",
+        "#..........B...................#",
+        "#BBB.......B.......BBB.........#",
+        "#..B..DDDDDDDDDDD..B...........#",
+        "#..B...............B...........#",
+        "#..BBBBBBBBBBBBBBBBB...........#",
+        "#..............................#",
+        "#..D....D....D....D....D.......#",
+        "#..B....B....B....B....B.......#",
+        "#...............................#",
+        "#M..............................#",
+        "#...............................#",
+        "#...............................E",
+        "################################",
+        "################################",
+      ]
+    },
+    // Level 3
+    {
+      needed: 16, time: 200,
+      rows: [
+        "SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS",
+        "SP.............................S",
+        "S...B..B..B..B..B..B..B..B.....S",
+        "S..DDD.DDD.DDD.DDD.DDD.DDD.DDD.S",
+        "S...B..B..B..B..B..B..B..B.....S",
+        "S..............................S",
+        "S.BBBBBBBBBBBBBBBBBBBBBBBBBBBB.S",
+        "S..............................S",
+        "S...D....D....D....D....D......S",
+        "S....B....B....B....B....B.....S",
+        "S..............................S",
+        "S.BBBBBBBBBBBBBBBBBBBBBBBBBBBB.S",
+        "S..............................S",
+        "S..B..B..B..B..B..B..B..B..B...S",
+        "S.DDD.DDD.DDD.DDD.DDD.DDD.DDD..S",
+        "S..B..B..B..B..B..B..B..B..B...S",
+        "S..............................S",
+        "S.M............................S",
+        "S..............................S",
+        "S.............................ES",
+        "SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS",
+        "SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS",
+      ]
+    },
+  ];
+
+  const levelIdx = Math.min(n - 1, maps.length - 1);
+  const def = maps[levelIdx];
+  const g = Array.from({length: ROWS}, () => new Array(COLS).fill(DIRT));
+  enemies = [];
+
+  for (let r = 0; r < ROWS; r++) {
+    const row = def.rows[r] || '';
+    for (let c = 0; c < COLS; c++) {
+      const ch = row[c] || '.';
+      switch(ch) {
+        case '#': g[r][c] = WALL; break;
+        case 'S': g[r][c] = STEEL; break;
+        case ' ':
+        case '.': g[r][c] = DIRT; break;
+        case 'B': g[r][c] = BOULDER; break;
+        case 'D': g[r][c] = DIAMOND; break;
+        case 'E': g[r][c] = EXIT; break;
+        case 'M':
+          g[r][c] = EMPTY;
+          enemies.push({x: c, y: r, dx: 1, dy: 0, moveTimer: 0});
+          break;
+        case 'P':
+          g[r][c] = EMPTY;
+          px = c; py = r;
+          break;
+        default:  g[r][c] = EMPTY;
+      }
+    }
+  }
+  return {grid: g, needed: def.needed, time: def.time};
+}
+
+// ─── GAME INIT ───────────────────────────────────────────────────────────────
+function startLevel(n) {
+  currentLevel = n;
+  const lvl = buildLevel(n);
+  grid = lvl.grid;
+  diamondsNeeded = lvl.needed;
+  timeLeft = lvl.time;
+  diamondsCollected = 0;
+  gameOver = false;
+  levelComplete = false;
+  won = false;
+  playerDead = false;
+  playerDeadTimer = 0;
+  explosions = [];
+  inputQueue = [];
+  exitOpen = false;
+  animFrame = 0;
+  document.getElementById('restart-btn').style.display = 'none';
+  document.getElementById('msg').textContent = '';
+  updateHUD();
+
+  if (timerInterval) clearInterval(timerInterval);
+  timerInterval = setInterval(() => {
+    if (!gameOver && !levelComplete && !playerDead) {
+      timeLeft--;
+      document.getElementById('timer').textContent = timeLeft;
+      if (timeLeft <= 0) killPlayer();
+    }
+  }, 1000);
+}
+
+function updateHUD() {
+  document.getElementById('score').textContent = score;
+  document.getElementById('diamonds').textContent = diamondsCollected;
+  document.getElementById('needed').textContent = diamondsNeeded;
+  document.getElementById('lives').textContent = lives;
+  document.getElementById('level').textContent = currentLevel;
+  document.getElementById('timer').textContent = timeLeft;
+}
+
+// ─── INPUT ───────────────────────────────────────────────────────────────────
+const keys = {};
+document.addEventListener('keydown', e => {
+  keys[e.key] = true;
+  if (['ArrowUp','ArrowDown','ArrowLeft','ArrowRight',' '].includes(e.key)) e.preventDefault();
+  if (e.key === 'r' || e.key === 'R') startLevel(currentLevel);
+
+  // Queue movement
+  let dx = 0, dy = 0;
+  if (e.key === 'ArrowLeft'  || e.key === 'a' || e.key === 'A') { dx=-1; dy=0; }
+  if (e.key === 'ArrowRight' || e.key === 'd' || e.key === 'D') { dx=1;  dy=0; }
+  if (e.key === 'ArrowUp'    || e.key === 'w' || e.key === 'W') { dx=0;  dy=-1; }
+  if (e.key === 'ArrowDown'  || e.key === 's' || e.key === 'S') { dx=0;  dy=1; }
+  if ((dx !== 0 || dy !== 0) && inputQueue.length < 3) inputQueue.push({dx, dy});
+});
+document.addEventListener('keyup', e => { keys[e.key] = false; });
+
+// ─── PHYSICS ─────────────────────────────────────────────────────────────────
+function inBounds(x, y) { return x >= 0 && x < COLS && y >= 0 && y < ROWS; }
+function cell(x, y) { return inBounds(x, y) ? grid[y][x] : WALL; }
+function setCell(x, y, v) { if (inBounds(x,y)) grid[y][x] = v; }
+
+function isRounded(t) { return t === BOULDER || t === DIAMOND || t === WALL || t === STEEL; }
+function isFallable(t) { return t === BOULDER || t === DIAMOND; }
+
+// Boulder/diamond gravity + slide
+function physicsTick() {
+  // Process explosions
+  for (let i = explosions.length-1; i >= 0; i--) {
+    const ex = explosions[i];
+    ex.timer--;
+    if (ex.timer <= 0) {
+      // Clear explosion cells
+      for (let dy=-1; dy<=1; dy++)
+        for (let dx=-1; dx<=1; dx++) {
+          const cx = ex.x+dx, cy = ex.y+dy;
+          if (inBounds(cx,cy) && (cell(cx,cy)===EXPLODE||cell(cx,cy)===EXPLODE2))
+            setCell(cx,cy,EMPTY);
+        }
+      explosions.splice(i,1);
+    }
+  }
+
+  // Scan bottom-to-top for falling objects
+  for (let y = ROWS-2; y >= 0; y--) {
+    for (let x = 0; x < COLS; x++) {
+      const t = cell(x, y);
+      if (!isFallable(t)) continue;
+
+      // Fall straight down
+      if (cell(x, y+1) === EMPTY) {
+        setCell(x, y+1, t);
+        setCell(x, y, EMPTY);
+        // If fell onto player
+        if (x === px && y+1 === py) killPlayer();
+        // If enemy below
+        checkFallKillEnemy(x, y+1);
+      }
+      // Slide right off rounded object
+      else if (isRounded(cell(x,y+1)) && cell(x+1,y)===EMPTY && cell(x+1,y+1)===EMPTY) {
+        setCell(x+1, y, t);
+        setCell(x, y, EMPTY);
+      }
+      // Slide left off rounded object
+      else if (isRounded(cell(x,y+1)) && cell(x-1,y)===EMPTY && cell(x-1,y+1)===EMPTY) {
+        setCell(x-1, y, t);
+        setCell(x, y, EMPTY);
+      }
+    }
+  }
+
+  // Move enemies
+  for (const e of enemies) {
+    e.moveTimer++;
+    if (e.moveTimer < 3) continue;
+    e.moveTimer = 0;
+
+    const nx = e.x + e.dx, ny = e.y + e.dy;
+    // Try to move, rotate if blocked
+    if (inBounds(nx, ny) && (cell(nx,ny)===EMPTY||cell(nx,ny)===DIRT)) {
+      setCell(nx, ny, EMPTY);
+      e.x = nx; e.y = ny;
+      if (nx===px && ny===py) killPlayer();
+    } else {
+      // Turn: rotate 90° clockwise
+      const tmp = e.dx;
+      e.dx = -e.dy;
+      e.dy = tmp;
+    }
+    // If adjacent to player, explode
+    if (Math.abs(e.x-px)<=1 && Math.abs(e.y-py)<=1) {
+      explodeAt(e.x, e.y);
+    }
+  }
+}
+
+function checkFallKillEnemy(x, y) {
+  for (let i = enemies.length-1; i>=0; i--) {
+    if (enemies[i].x===x && enemies[i].y===y) {
+      explodeAt(x, y);
+      enemies.splice(i,1);
+    }
+  }
+}
+
+function explodeAt(cx, cy) {
+  for (let dy=-1; dy<=1; dy++) {
+    for (let dx=-1; dx<=1; dx++) {
+      const x=cx+dx, y=cy+dy;
+      if (!inBounds(x,y)) continue;
+      const t = cell(x,y);
+      if (t===STEEL) continue;
+      setCell(x,y,EXPLODE);
+      if (x===px && y===py) killPlayer();
+    }
+  }
+  explosions.push({x:cx, y:cy, timer:6});
+}
+
+// ─── PLAYER MOVEMENT ─────────────────────────────────────────────────────────
+let moveTimer = 0;
+const MOVE_RATE = 100; // ms between moves
+
+function tryMove(dx, dy) {
+  if (playerDead || gameOver || levelComplete) return;
+  const nx = px + dx, ny = py + dy;
+  if (!inBounds(nx, ny)) return;
+  const t = cell(nx, ny);
+
+  if (t === STEEL || t === WALL) return;
+
+  if (t === BOULDER && dy === 0) {
+    // Push boulder
+    const bx = nx + dx;
+    if (inBounds(bx, ny) && cell(bx, ny) === EMPTY) {
+      setCell(bx, ny, BOULDER);
+      setCell(nx, ny, EMPTY);
+    } else return;
+  }
+
+  if (t === DIAMOND) {
+    diamondsCollected++;
+    score += 10 * currentLevel;
+    if (diamondsCollected >= diamondsNeeded) {
+      exitOpen = true;
+      document.getElementById('msg').textContent = 'EXIT IS OPEN!';
+    }
+    updateHUD();
+  }
+
+  if (t === EXIT) {
+    if (exitOpen) {
+      score += timeLeft * 2;
+      updateHUD();
+      levelComplete = true;
+      clearInterval(timerInterval);
+      const next = currentLevel + 1;
+      if (next > 3) {
+        won = true;
+        document.getElementById('msg').textContent = 'YOU WIN! CONGRATULATIONS!';
+        document.getElementById('restart-btn').style.display = 'inline-block';
+        document.getElementById('restart-btn').textContent = 'PLAY AGAIN';
+        document.getElementById('restart-btn').onclick = () => { score=0; lives=3; startLevel(1); };
+      } else {
+        document.getElementById('msg').textContent = `LEVEL ${currentLevel} COMPLETE!`;
+        setTimeout(() => startLevel(next), 2000);
+      }
+      return;
+    } else return; // exit not open
+  }
+
+  if (t === EXPLODE || t === EXPLODE2) return;
+
+  setCell(px, py, EMPTY);
+  px = nx; py = ny;
+  if (cell(px,py)!==EXIT) setCell(px,py,EMPTY);
+}
+
+function killPlayer() {
+  if (playerDead || gameOver) return;
+  playerDead = true;
+  playerDeadTimer = 60;
+  clearInterval(timerInterval);
+}
+
+// ─── MAIN LOOP ───────────────────────────────────────────────────────────────
+let lastTime = 0;
+score = 0; lives = 3;
+
+function loop(ts) {
+  requestAnimationFrame(loop);
+  const dt = ts - lastTime;
+  lastTime = ts;
+
+  animTimer += dt;
+  if (animTimer > 300) { animTimer = 0; animFrame = (animFrame+1)%4; }
+
+  if (playerDead) {
+    playerDeadTimer--;
+    if (playerDeadTimer <= 0) {
+      lives--;
+      document.getElementById('lives').textContent = lives;
+      if (lives <= 0) {
+        gameOver = true;
+        document.getElementById('msg').textContent = 'GAME OVER';
+        document.getElementById('restart-btn').style.display = 'inline-block';
+        document.getElementById('restart-btn').textContent = 'TRY AGAIN';
+        document.getElementById('restart-btn').onclick = () => { score=0; lives=3; startLevel(currentLevel); };
+      } else {
+        startLevel(currentLevel);
+        return;
+      }
+    }
+  }
+
+  if (!gameOver && !levelComplete && !playerDead) {
+    // Process input
+    physicsTimer += dt;
+    if (physicsTimer >= PHYSICS_RATE) {
+      physicsTimer -= PHYSICS_RATE;
+      physicsTick();
+      // Move player if key held
+      if (inputQueue.length > 0) {
+        const {dx, dy} = inputQueue.shift();
+        tryMove(dx, dy);
+      } else {
+        // Hold key movement
+        if      (keys['ArrowLeft']  || keys['a'] || keys['A']) tryMove(-1, 0);
+        else if (keys['ArrowRight'] || keys['d'] || keys['D']) tryMove(1,  0);
+        else if (keys['ArrowUp']    || keys['w'] || keys['W']) tryMove(0, -1);
+        else if (keys['ArrowDown']  || keys['s'] || keys['S']) tryMove(0,  1);
+      }
+    }
+  }
+
+  draw();
+}
+
+// ─── DRAWING ─────────────────────────────────────────────────────────────────
+// Viewport: center on player, clamped to grid
+const VIEW_COLS = Math.floor(canvas.width / T);
+const VIEW_ROWS = Math.floor(canvas.height / T);
+
+function draw() {
+  // Viewport offset
+  let vx = px - Math.floor(VIEW_COLS/2);
+  let vy = py - Math.floor(VIEW_ROWS/2);
+  vx = Math.max(0, Math.min(vx, COLS - VIEW_COLS));
+  vy = Math.max(0, Math.min(vy, ROWS - VIEW_ROWS));
+
+  ctx.fillStyle = '#000';
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+  // Draw tiles
+  for (let r = 0; r < VIEW_ROWS; r++) {
+    for (let c = 0; c < VIEW_COLS; c++) {
+      const gx = c + vx, gy = r + vy;
+      if (!inBounds(gx, gy)) continue;
+      const t = cell(gx, gy);
+      drawTile(ctx, c*T, r*T, t, gx, gy);
+    }
+  }
+
+  // Draw player
+  if (!gameOver && !won) {
+    const screenX = (px - vx) * T;
+    const screenY = (py - vy) * T;
+    drawPlayer(ctx, screenX, screenY);
+  }
+
+  // Draw enemies
+  for (const e of enemies) {
+    const sx = (e.x - vx)*T, sy = (e.y - vy)*T;
+    if (sx >= 0 && sx < canvas.width && sy >= 0 && sy < canvas.height)
+      drawEnemy(ctx, sx, sy);
+  }
+}
+
+function drawTile(ctx, x, y, t, gx, gy) {
+  switch(t) {
+    case DIRT:
+      ctx.fillStyle = '#8B4513';
+      ctx.fillRect(x,y,T,T);
+      ctx.fillStyle = '#7a3c10';
+      ctx.fillRect(x+1,y+1,T-2,T-2);
+      break;
+    case WALL:
+      ctx.fillStyle = '#555';
+      ctx.fillRect(x,y,T,T);
+      ctx.fillStyle = '#777';
+      ctx.fillRect(x,y,T/2,T/2);
+      ctx.fillRect(x+T/2,y+T/2,T/2,T/2);
+      ctx.fillStyle = '#444';
+      ctx.fillRect(x+T/2,y,T/2,T/2);
+      ctx.fillRect(x,y+T/2,T/2,T/2);
+      break;
+    case STEEL:
+      ctx.fillStyle = '#888';
+      ctx.fillRect(x,y,T,T);
+      ctx.fillStyle = '#aaa';
+      ctx.fillRect(x,y,T,2);
+      ctx.fillRect(x,y,2,T);
+      ctx.fillStyle = '#666';
+      ctx.fillRect(x,y+T-2,T,2);
+      ctx.fillRect(x+T-2,y,2,T);
+      break;
+    case BOULDER:
+      ctx.fillStyle = '#888';
+      ctx.beginPath();
+      ctx.arc(x+T/2, y+T/2, T/2-2, 0, Math.PI*2);
+      ctx.fill();
+      ctx.fillStyle = '#bbb';
+      ctx.beginPath();
+      ctx.arc(x+T/2-3, y+T/2-3, T/6, 0, Math.PI*2);
+      ctx.fill();
+      break;
+    case DIAMOND:
+      const da = animFrame * 0.1;
+      ctx.save();
+      ctx.translate(x+T/2, y+T/2);
+      ctx.rotate(da * Math.PI);
+      const colors = ['#00f5ff','#0080ff','#00cfff','#80ffff'];
+      ctx.fillStyle = colors[animFrame % colors.length];
+      ctx.beginPath();
+      ctx.moveTo(0, -T/2+3);
+      ctx.lineTo(T/2-3, 0);
+      ctx.lineTo(0, T/2-3);
+      ctx.lineTo(-T/2+3, 0);
+      ctx.closePath();
+      ctx.fill();
+      ctx.fillStyle = 'rgba(255,255,255,0.5)';
+      ctx.beginPath();
+      ctx.moveTo(0, -T/2+3);
+      ctx.lineTo(T/2-3, 0);
+      ctx.lineTo(0, 0);
+      ctx.closePath();
+      ctx.fill();
+      ctx.restore();
+      break;
+    case EXIT:
+      ctx.fillStyle = exitOpen ? '#00ff00' : '#005500';
+      ctx.fillRect(x,y,T,T);
+      ctx.strokeStyle = exitOpen ? '#88ff88' : '#003300';
+      ctx.lineWidth = 2;
+      ctx.strokeRect(x+2,y+2,T-4,T-4);
+      if (exitOpen) {
+        ctx.fillStyle = '#fff';
+        ctx.font = `bold ${T-6}px monospace`;
+        ctx.textAlign = 'center';
+        ctx.fillText('E', x+T/2, y+T-4);
+      }
+      break;
+    case EXPLODE:
+    case EXPLODE2:
+      const colors2 = ['#ff4400','#ff8800','#ffcc00','#ffffff'];
+      ctx.fillStyle = colors2[animFrame % colors2.length];
+      ctx.fillRect(x,y,T,T);
+      ctx.fillStyle = 'rgba(255,255,200,0.5)';
+      ctx.beginPath();
+      ctx.arc(x+T/2,y+T/2,T/3,0,Math.PI*2);
+      ctx.fill();
+      break;
+    case EMPTY:
+      // already black background
+      break;
+  }
+}
+
+function drawPlayer(ctx, x, y) {
+  if (playerDead && Math.floor(playerDeadTimer/5)%2===0) return; // blink
+  // Body
+  ctx.fillStyle = '#ffcc00';
+  ctx.beginPath();
+  ctx.arc(x+T/2, y+T/2, T/2-2, 0, Math.PI*2);
+  ctx.fill();
+  // Eyes
+  ctx.fillStyle = '#222';
+  ctx.beginPath();
+  ctx.arc(x+T/2-3, y+T/2-3, 2, 0, Math.PI*2);
+  ctx.fill();
+  ctx.beginPath();
+  ctx.arc(x+T/2+3, y+T/2-3, 2, 0, Math.PI*2);
+  ctx.fill();
+  // Smile
+  ctx.strokeStyle = '#222';
+  ctx.lineWidth = 1.5;
+  ctx.beginPath();
+  ctx.arc(x+T/2, y+T/2+1, 4, 0.2*Math.PI, 0.8*Math.PI);
+  ctx.stroke();
+  // Hat
+  ctx.fillStyle = '#333';
+  ctx.fillRect(x+4, y+3, T-8, 3);
+  ctx.fillRect(x+7, y, T-14, 5);
+}
+
+function drawEnemy(ctx, x, y) {
+  ctx.fillStyle = '#ff2200';
+  ctx.beginPath();
+  ctx.moveTo(x+T/2, y+2);
+  ctx.lineTo(x+T-2, y+T-2);
+  ctx.lineTo(x+2, y+T-2);
+  ctx.closePath();
+  ctx.fill();
+  ctx.fillStyle = '#ff8800';
+  ctx.beginPath();
+  ctx.moveTo(x+T/2, y+6);
+  ctx.lineTo(x+T-6, y+T-6);
+  ctx.lineTo(x+6, y+T-6);
+  ctx.closePath();
+  ctx.fill();
+  // Eyes
+  ctx.fillStyle = '#fff';
+  ctx.beginPath();
+  ctx.arc(x+T/2-3, y+T/2+1, 2, 0, Math.PI*2);
+  ctx.fill();
+  ctx.beginPath();
+  ctx.arc(x+T/2+3, y+T/2+1, 2, 0, Math.PI*2);
+  ctx.fill();
+}
+
+// ─── START ───────────────────────────────────────────────────────────────────
+startLevel(1);
+requestAnimationFrame(loop);
+</script>
+</body>
+</html>
