@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TotalEnergies – Executive Committee</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --red: #e2001a;
+      --dark: #1a1a2e;
+      --mid: #2e2e4e;
+      --light: #f5f6fa;
+      --card-bg: #ffffff;
+      --text: #222;
+      --muted: #666;
+      --border: #e0e0e0;
+    }
+
+    body {
+      font-family: 'Segoe UI', Arial, sans-serif;
+      background: var(--light);
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    /* ── Header ── */
+    header {
+      background: linear-gradient(135deg, var(--dark) 0%, var(--mid) 100%);
+      color: #fff;
+      padding: 48px 24px 40px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    header::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: repeating-linear-gradient(
+        45deg,
+        transparent,
+        transparent 40px,
+        rgba(255,255,255,.03) 40px,
+        rgba(255,255,255,.03) 80px
+      );
+    }
+    .header-inner { position: relative; z-index: 1; }
+    .logo-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: var(--red);
+      color: #fff;
+      font-weight: 700;
+      font-size: 1.1rem;
+      letter-spacing: .5px;
+      padding: 8px 18px;
+      border-radius: 4px;
+      margin-bottom: 20px;
+    }
+    .logo-badge span { font-size: 1.4rem; }
+    header h1 {
+      font-size: clamp(1.6rem, 4vw, 2.6rem);
+      font-weight: 700;
+      letter-spacing: -.5px;
+      margin-bottom: 10px;
+    }
+    header p {
+      font-size: 1rem;
+      color: rgba(255,255,255,.75);
+      max-width: 560px;
+      margin: 0 auto;
+    }
+
+    /* ── Grid ── */
+    main {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 48px 20px 64px;
+    }
+    .section-label {
+      font-size: .75rem;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--red);
+      margin-bottom: 8px;
+    }
+    .section-title {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--dark);
+      margin-bottom: 36px;
+      padding-bottom: 12px;
+      border-bottom: 3px solid var(--red);
+      display: inline-block;
+    }
+
+    /* Chairman card – full width */
+    .chairman-card {
+      background: var(--card-bg);
+      border-radius: 12px;
+      box-shadow: 0 4px 24px rgba(0,0,0,.08);
+      border-left: 6px solid var(--red);
+      padding: 36px;
+      margin-bottom: 48px;
+      display: flex;
+      gap: 32px;
+      align-items: flex-start;
+    }
+    .chairman-avatar {
+      width: 96px;
+      height: 96px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--red), #a50014);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2.4rem;
+      color: #fff;
+      flex-shrink: 0;
+      font-weight: 700;
+    }
+    .chairman-info { flex: 1; }
+    .chairman-info .role-badge {
+      display: inline-block;
+      background: var(--red);
+      color: #fff;
+      font-size: .7rem;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      padding: 3px 10px;
+      border-radius: 20px;
+      margin-bottom: 8px;
+    }
+    .chairman-info h2 {
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: var(--dark);
+      margin-bottom: 4px;
+    }
+    .chairman-info .title {
+      font-size: 1rem;
+      color: var(--red);
+      font-weight: 600;
+      margin-bottom: 12px;
+    }
+    .chairman-info p {
+      color: var(--muted);
+      font-size: .95rem;
+    }
+    .meta-list {
+      margin-top: 14px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .meta-tag {
+      background: var(--light);
+      border: 1px solid var(--border);
+      color: var(--muted);
+      font-size: .78rem;
+      padding: 3px 10px;
+      border-radius: 20px;
+    }
+
+    /* Member grid */
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(310px, 1fr));
+      gap: 24px;
+    }
+    .card {
+      background: var(--card-bg);
+      border-radius: 12px;
+      box-shadow: 0 2px 16px rgba(0,0,0,.07);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      transition: transform .2s, box-shadow .2s;
+    }
+    .card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 32px rgba(0,0,0,.13);
+    }
+    .card-header {
+      background: linear-gradient(135deg, var(--dark), var(--mid));
+      padding: 28px 24px 24px;
+      display: flex;
+      align-items: center;
+      gap: 18px;
+    }
+    .avatar {
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      background: var(--red);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      color: #fff;
+      font-weight: 700;
+      flex-shrink: 0;
+      border: 3px solid rgba(255,255,255,.2);
+    }
+    .card-header-text h3 {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: #fff;
+      line-height: 1.3;
+    }
+    .card-header-text .since {
+      font-size: .75rem;
+      color: rgba(255,255,255,.55);
+      margin-top: 2px;
+    }
+    .card-body {
+      padding: 20px 24px 24px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .card-title {
+      font-size: .9rem;
+      font-weight: 700;
+      color: var(--red);
+      text-transform: uppercase;
+      letter-spacing: .5px;
+    }
+    .card-body p {
+      font-size: .88rem;
+      color: var(--muted);
+      flex: 1;
+    }
+    .card-footer {
+      border-top: 1px solid var(--border);
+      padding: 12px 24px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+    .tag {
+      background: var(--light);
+      border: 1px solid var(--border);
+      color: var(--muted);
+      font-size: .73rem;
+      padding: 2px 8px;
+      border-radius: 12px;
+    }
+
+    /* Footer */
+    footer {
+      text-align: center;
+      padding: 28px 20px;
+      font-size: .82rem;
+      color: var(--muted);
+      border-top: 1px solid var(--border);
+    }
+    footer a { color: var(--red); text-decoration: none; }
+    footer a:hover { text-decoration: underline; }
+
+    @media (max-width: 600px) {
+      .chairman-card { flex-direction: column; }
+      .chairman-avatar { width: 72px; height: 72px; font-size: 1.8rem; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <div class="logo-badge"><span>⚡</span> TotalEnergies</div>
+    <h1>Executive Committee</h1>
+    <p>The leaders driving TotalEnergies' transformation into a broad energy company.</p>
+  </div>
+</header>
+
+<main>
+
+  <!-- Chairman -->
+  <div class="section-label">Leadership</div>
+  <div class="section-title">Chairman &amp; CEO</div>
+
+  <div class="chairman-card">
+    <div class="chairman-avatar">PP</div>
+    <div class="chairman-info">
+      <span class="role-badge">Chairman &amp; CEO</span>
+      <h2>Patrick Pouyanné</h2>
+      <div class="title">Chairman and Chief Executive Officer</div>
+      <p>
+        Born June 24, 1963 (French). Patrick Pouyanné has been Chairman and CEO of TotalEnergies since 2015,
+        steering the company's strategic pivot from a pure-play oil major toward a diversified energy company
+        with a growing focus on renewables, gas, and low-carbon solutions. He chairs the Strategy &amp; CSR
+        Committee and is a graduate of École Polytechnique and Corps des Mines.
+      </p>
+      <div class="meta-list">
+        <span class="meta-tag">Director since 2015</span>
+        <span class="meta-tag">Reappointed until 2027</span>
+        <span class="meta-tag">École Polytechnique</span>
+        <span class="meta-tag">Corps des Mines</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Members Grid -->
+  <div class="section-label">Executives</div>
+  <div class="section-title">Executive Committee Members</div>
+
+  <div class="grid">
+
+    <!-- Aurélien Hamelle -->
+    <div class="card">
+      <div class="card-header">
+        <div class="avatar">AH</div>
+        <div class="card-header-text">
+          <h3>Aurélien Hamelle</h3>
+          <div class="since">Member since January 2024</div>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="card-title">President, Strategy &amp; Sustainability</div>
+        <p>
+          Born November 5, 1978 (French). Aurélien Hamelle oversees strategy, sustainability,
+          government affairs, HSE, and legal divisions. He previously served as General Counsel
+          and Senior Vice President for Acquisitions &amp; Disposals before joining the Executive
+          Committee in January 2024.
+        </p>
+      </div>
+      <div class="card-footer">
+        <span class="tag">Strategy</span>
+        <span class="tag">Sustainability</span>
+        <span class="tag">HSE</span>
+        <span class="tag">Legal</span>
+      </div>
+    </div>
+
+    <!-- Helle Kristoffersen -->
+    <div class="card">
+      <div class="card-header">
+        <div class="avatar">HK</div>
+        <div class="card-header-text">
+          <h3>Helle Kristoffersen</h3>
+          <div class="since">Member since August 2019</div>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="card-title">President, Asia</div>
+        <p>
+          Born April 13, 1964 (French and Danish). Based in Tokyo, Helle Kristoffersen leads
+          TotalEnergies' activities across Asia. She previously served as President of Strategy
+          &amp; Sustainability (2021–2024) and President of Strategy &amp; Innovation (2019–2021).
+        </p>
+      </div>
+      <div class="card-footer">
+        <span class="tag">Asia Pacific</span>
+        <span class="tag">Tokyo</span>
+        <span class="tag">Strategy</span>
+      </div>
+    </div>
+
+    <!-- Stéphane Michel -->
+    <div class="card">
+      <div class="card-header">
+        <div class="avatar">SM</div>
+        <div class="card-header-text">
+          <h3>Stéphane Michel</h3>
+          <div class="since">Member since March 2021</div>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="card-title">President, Gas, Renewables &amp; Power</div>
+        <p>
+          Born February 17, 1973 (French). Stéphane Michel heads the Gas, Renewables &amp; Power
+          segment, a key pillar of TotalEnergies' energy transition strategy. He is a graduate of
+          École Polytechnique and École des Mines de Paris.
+        </p>
+      </div>
+      <div class="card-footer">
+        <span class="tag">LNG</span>
+        <span class="tag">Renewables</span>
+        <span class="tag">Power</span>
+        <span class="tag">Gas</span>
+      </div>
+    </div>
+
+    <!-- Bernard Pinatel -->
+    <div class="card">
+      <div class="card-header">
+        <div class="avatar">BP</div>
+        <div class="card-header-text">
+          <h3>Bernard Pinatel</h3>
+          <div class="since">Member since September 2016</div>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="card-title">President, Downstream &amp; Marketing and Services</div>
+        <p>
+          Born June 5, 1962 (French). Bernard Pinatel oversees downstream operations and
+          the marketing &amp; services division, which includes retail and lubricants activities
+          worldwide. He holds a degree from École Polytechnique and an MBA from INSEAD.
+        </p>
+      </div>
+      <div class="card-footer">
+        <span class="tag">Downstream</span>
+        <span class="tag">Marketing</span>
+        <span class="tag">Retail</span>
+        <span class="tag">Lubricants</span>
+      </div>
+    </div>
+
+    <!-- Catherine Remy -->
+    <div class="card">
+      <div class="card-header">
+        <div class="avatar">CR</div>
+        <div class="card-header-text">
+          <h3>Catherine Remy</h3>
+          <div class="since">Member since August 2025</div>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="card-title">President, People &amp; Social Engagement</div>
+        <p>
+          Born April 5, 1978 (French). Catherine Remy joined TotalEnergies in 2004 and was appointed
+          to the Executive Committee in August 2025. She holds a degree from École Polytechnique (2001)
+          and a Master of Science from the University of California, Berkeley (2003).
+        </p>
+      </div>
+      <div class="card-footer">
+        <span class="tag">HR</span>
+        <span class="tag">Social Engagement</span>
+        <span class="tag">People</span>
+      </div>
+    </div>
+
+    <!-- Jean-Pierre Sbraire -->
+    <div class="card">
+      <div class="card-header">
+        <div class="avatar">JS</div>
+        <div class="card-header-text">
+          <h3>Jean-Pierre Sbraire</h3>
+          <div class="since">Member since August 2019</div>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="card-title">Chief Financial Officer</div>
+        <p>
+          Born October 28, 1965 (French). Jean-Pierre Sbraire began his career at TotalEnergies in
+          1990 in the Trading &amp; Shipping Division. As CFO he is responsible for finance,
+          treasury, risk management, and investor relations. He is a graduate of ENSTA ParisTech.
+        </p>
+      </div>
+      <div class="card-footer">
+        <span class="tag">Finance</span>
+        <span class="tag">Treasury</span>
+        <span class="tag">Investor Relations</span>
+      </div>
+    </div>
+
+    <!-- Namita Shah -->
+    <div class="card">
+      <div class="card-header">
+        <div class="avatar">NS</div>
+        <div class="card-header-text">
+          <h3>Namita Shah</h3>
+          <div class="since">Member since September 2016</div>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="card-title">President, OneTech</div>
+        <p>
+          Born August 21, 1968 (French and Indian). Namita Shah leads OneTech, TotalEnergies'
+          integrated technology, digital, and innovation arm. Before joining TotalEnergies she
+          practiced law at Shearman &amp; Sterling and brings extensive experience in M&amp;A
+          and international arbitration.
+        </p>
+      </div>
+      <div class="card-footer">
+        <span class="tag">Technology</span>
+        <span class="tag">Digital</span>
+        <span class="tag">Innovation</span>
+        <span class="tag">R&amp;D</span>
+      </div>
+    </div>
+
+    <!-- Vincent Stoquart -->
+    <div class="card">
+      <div class="card-header">
+        <div class="avatar">VS</div>
+        <div class="card-header-text">
+          <h3>Vincent Stoquart</h3>
+          <div class="since">Member since September 2024</div>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="card-title">President, Refining &amp; Chemicals</div>
+        <p>
+          Born May 15, 1974 (Belgian). Vincent Stoquart leads the Refining &amp; Chemicals segment,
+          overseeing TotalEnergies' refinery network and petrochemical activities. He is a graduate
+          of the Catholic University of Louvain (UCLouvain) in Belgium.
+        </p>
+      </div>
+      <div class="card-footer">
+        <span class="tag">Refining</span>
+        <span class="tag">Chemicals</span>
+        <span class="tag">Petrochemicals</span>
+      </div>
+    </div>
+
+    <!-- Nicolas Terraz -->
+    <div class="card">
+      <div class="card-header">
+        <div class="avatar">NT</div>
+        <div class="card-header-text">
+          <h3>Nicolas Terraz</h3>
+          <div class="since">Member since September 2021</div>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="card-title">President, Exploration &amp; Production</div>
+        <p>
+          Born September 9, 1969 (French). Nicolas Terraz heads Upstream operations, overseeing
+          TotalEnergies' exploration and production assets worldwide. He is a graduate of
+          École Polytechnique and holds a Master's degree from MIT.
+        </p>
+      </div>
+      <div class="card-footer">
+        <span class="tag">Upstream</span>
+        <span class="tag">Exploration</span>
+        <span class="tag">Production</span>
+        <span class="tag">MIT</span>
+      </div>
+    </div>
+
+  </div><!-- /grid -->
+</main>
+
+<footer>
+  <p>
+    Source: <a href="https://totalenergies.com/company/identity/governance/executive-committee-performance" target="_blank" rel="noopener">TotalEnergies Official Governance Page</a>
+    &nbsp;·&nbsp; Data as of February 2026
+  </p>
+</footer>
+
+</body>
+</html>
