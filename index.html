@@ -1,0 +1,1062 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Laura Artal – Global Talent Strategy, Associate Director</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Playfair+Display:wght@700;800&display=swap" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <style>
+    /* ── AMADEUS PALETTE ───────────────────────────────────────────── */
+    :root {
+      --navy:    #00205B;
+      --blue:    #0076C0;
+      --cyan:    #00A0DF;
+      --orange:  #FF6B2B;
+      --light:   #E8F4FD;
+      --offwhite:#F5F8FC;
+      --gray:    #6B7280;
+      --dark:    #111827;
+      --white:   #FFFFFF;
+    }
+
+    /* ── RESET & BASE ──────────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--offwhite);
+      color: var(--dark);
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    /* ── NAV ───────────────────────────────────────────────────────── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      background: rgba(0, 32, 91, 0.97);
+      backdrop-filter: blur(12px);
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 48px; height: 64px;
+    }
+    .nav-logo { color: var(--white); font-weight: 800; font-size: 1.1rem; letter-spacing: 0.04em; }
+    .nav-logo span { color: var(--cyan); }
+    .nav-links { display: flex; gap: 32px; list-style: none; }
+    .nav-links a {
+      color: rgba(255,255,255,0.75); text-decoration: none;
+      font-size: 0.85rem; font-weight: 500; letter-spacing: 0.03em;
+      transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--cyan); }
+
+    /* ── HERO ──────────────────────────────────────────────────────── */
+    .hero {
+      min-height: 100vh;
+      background: linear-gradient(135deg, var(--navy) 0%, #003580 55%, #004fa3 100%);
+      display: flex; align-items: center; justify-content: center;
+      position: relative; overflow: hidden; padding: 80px 48px 48px;
+    }
+    .hero::before {
+      content: '';
+      position: absolute; inset: 0;
+      background:
+        radial-gradient(ellipse 60% 60% at 80% 20%, rgba(0,160,223,0.18) 0%, transparent 70%),
+        radial-gradient(ellipse 40% 40% at 10% 80%, rgba(255,107,43,0.12) 0%, transparent 70%);
+    }
+    /* Grid lines decoration */
+    .hero::after {
+      content: '';
+      position: absolute; inset: 0;
+      background-image:
+        linear-gradient(rgba(255,255,255,0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.04) 1px, transparent 1px);
+      background-size: 64px 64px;
+    }
+    .hero-inner {
+      position: relative; z-index: 1;
+      max-width: 1100px; width: 100%;
+      display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center;
+    }
+    .hero-tag {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: rgba(0,160,223,0.2); border: 1px solid rgba(0,160,223,0.4);
+      border-radius: 24px; padding: 6px 16px;
+      color: var(--cyan); font-size: 0.78rem; font-weight: 600;
+      letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 20px;
+    }
+    .hero-tag .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--cyan); }
+    h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2.8rem, 5vw, 4.2rem);
+      color: var(--white); line-height: 1.1; margin-bottom: 16px;
+    }
+    h1 span { color: var(--cyan); }
+    .hero-subtitle {
+      color: rgba(255,255,255,0.7); font-size: 1.05rem;
+      font-weight: 400; margin-bottom: 32px; max-width: 480px;
+    }
+    .hero-pills { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 36px; }
+    .pill {
+      background: rgba(255,255,255,0.1);
+      border: 1px solid rgba(255,255,255,0.15);
+      color: rgba(255,255,255,0.85);
+      padding: 6px 14px; border-radius: 20px;
+      font-size: 0.78rem; font-weight: 500;
+    }
+    .hero-stats {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px;
+    }
+    .stat-card {
+      background: rgba(255,255,255,0.07);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 16px; padding: 20px 16px; text-align: center;
+      backdrop-filter: blur(4px);
+    }
+    .stat-card .num {
+      font-size: 2rem; font-weight: 800; color: var(--white); line-height: 1;
+    }
+    .stat-card .num span { color: var(--cyan); }
+    .stat-card .lbl {
+      font-size: 0.72rem; color: rgba(255,255,255,0.55);
+      font-weight: 500; text-transform: uppercase; letter-spacing: 0.06em; margin-top: 6px;
+    }
+    /* Avatar / visual right side */
+    .hero-right {
+      display: flex; flex-direction: column; gap: 16px; align-items: center;
+    }
+    .avatar-ring {
+      width: 220px; height: 220px; border-radius: 50%;
+      background: linear-gradient(135deg, var(--cyan), var(--blue));
+      display: flex; align-items: center; justify-content: center;
+      position: relative; flex-shrink: 0;
+    }
+    .avatar-ring::before {
+      content: '';
+      position: absolute; inset: -6px;
+      border-radius: 50%;
+      border: 2px dashed rgba(0,160,223,0.4);
+      animation: spin 30s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .avatar-initials {
+      font-family: 'Playfair Display', serif;
+      font-size: 5rem; color: var(--white); font-weight: 700;
+    }
+    .hero-card {
+      background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 16px; padding: 20px 24px; width: 100%; max-width: 320px;
+      backdrop-filter: blur(4px);
+    }
+    .hero-card .label { font-size: 0.7rem; color: var(--cyan); font-weight: 700;
+      text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 8px; }
+    .hero-card .value { font-size: 0.9rem; color: rgba(255,255,255,0.85); font-weight: 500; }
+
+    /* ── SECTIONS ──────────────────────────────────────────────────── */
+    section { padding: 96px 48px; max-width: 1200px; margin: 0 auto; }
+    .section-full { max-width: none; padding: 96px 0; }
+    .section-full-inner { max-width: 1200px; margin: 0 auto; padding: 0 48px; }
+
+    .section-tag {
+      display: inline-flex; align-items: center; gap: 8px;
+      color: var(--blue); font-size: 0.75rem; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 12px;
+    }
+    .section-tag::before {
+      content: ''; width: 24px; height: 2px; background: var(--orange);
+    }
+    h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2rem, 3.5vw, 2.8rem);
+      color: var(--navy); line-height: 1.15; margin-bottom: 16px;
+    }
+    .section-lead {
+      font-size: 1.05rem; color: var(--gray); max-width: 600px; margin-bottom: 56px;
+    }
+
+    /* ── ABOUT ─────────────────────────────────────────────────────── */
+    .about-grid {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: start;
+    }
+    .about-text p { color: var(--gray); margin-bottom: 20px; font-size: 0.95rem; line-height: 1.75; }
+    .about-values { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 32px; }
+    .value-item {
+      background: var(--white); border-radius: 12px; padding: 20px;
+      border-left: 4px solid var(--cyan);
+      box-shadow: 0 2px 12px rgba(0,32,91,0.06);
+    }
+    .value-item .v-title { font-weight: 700; color: var(--navy); font-size: 0.85rem; margin-bottom: 4px; }
+    .value-item .v-desc { font-size: 0.78rem; color: var(--gray); }
+    .about-right { display: flex; flex-direction: column; gap: 16px; }
+    .info-row {
+      display: flex; align-items: center; gap: 16px;
+      background: var(--white); border-radius: 12px; padding: 16px 20px;
+      box-shadow: 0 2px 12px rgba(0,32,91,0.06);
+    }
+    .info-icon {
+      width: 40px; height: 40px; border-radius: 10px;
+      background: var(--light); display: flex; align-items: center; justify-content: center;
+      font-size: 1.1rem; flex-shrink: 0;
+    }
+    .info-row .i-label { font-size: 0.72rem; color: var(--gray); font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; }
+    .info-row .i-value { font-size: 0.9rem; color: var(--navy); font-weight: 600; }
+
+    /* ── TIMELINE ──────────────────────────────────────────────────── */
+    .timeline-bg {
+      background: linear-gradient(180deg, var(--offwhite) 0%, var(--white) 50%, var(--offwhite) 100%);
+      padding: 96px 0;
+    }
+    .timeline {
+      position: relative; max-width: 900px; margin: 0 auto;
+    }
+    .timeline::before {
+      content: ''; position: absolute; left: 50%; top: 0; bottom: 0;
+      width: 2px; background: linear-gradient(180deg, var(--cyan), var(--navy));
+      transform: translateX(-50%);
+    }
+    .tl-item {
+      display: grid; grid-template-columns: 1fr 40px 1fr;
+      gap: 0; margin-bottom: 48px; align-items: start;
+    }
+    .tl-item:nth-child(odd) .tl-content { grid-column: 1; text-align: right; }
+    .tl-item:nth-child(odd) .tl-dot    { grid-column: 2; }
+    .tl-item:nth-child(odd) .tl-right  { grid-column: 3; }
+    .tl-item:nth-child(even) .tl-left  { grid-column: 1; }
+    .tl-item:nth-child(even) .tl-dot   { grid-column: 2; }
+    .tl-item:nth-child(even) .tl-content { grid-column: 3; text-align: left; }
+
+    .tl-dot {
+      display: flex; align-items: flex-start; justify-content: center;
+      padding-top: 20px;
+    }
+    .tl-dot-inner {
+      width: 16px; height: 16px; border-radius: 50%;
+      background: var(--white); border: 3px solid var(--cyan);
+      box-shadow: 0 0 0 4px rgba(0,160,223,0.15);
+      flex-shrink: 0;
+    }
+    .tl-dot-inner.orange { border-color: var(--orange); box-shadow: 0 0 0 4px rgba(255,107,43,0.15); }
+    .tl-dot-inner.navy   { border-color: var(--navy);  box-shadow: 0 0 0 4px rgba(0,32,91,0.15); }
+
+    .tl-content {
+      background: var(--white); border-radius: 16px; padding: 24px 28px;
+      box-shadow: 0 4px 24px rgba(0,32,91,0.08);
+      margin: 8px 16px;
+      border-top: 3px solid var(--cyan);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .tl-content:hover { transform: translateY(-2px); box-shadow: 0 8px 32px rgba(0,32,91,0.13); }
+    .tl-content.orange { border-top-color: var(--orange); }
+    .tl-content.navy   { border-top-color: var(--navy); }
+    .tl-period {
+      font-size: 0.72rem; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 0.08em; color: var(--cyan); margin-bottom: 6px;
+    }
+    .tl-content.orange .tl-period { color: var(--orange); }
+    .tl-content.navy   .tl-period { color: var(--navy); }
+    .tl-company { font-size: 0.78rem; color: var(--gray); font-weight: 500; margin-bottom: 4px; }
+    .tl-role { font-size: 1rem; font-weight: 700; color: var(--navy); margin-bottom: 10px; }
+    .tl-desc { font-size: 0.82rem; color: var(--gray); line-height: 1.65; }
+    .tl-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 12px; }
+    .tl-tag {
+      background: var(--light); color: var(--blue);
+      font-size: 0.7rem; font-weight: 600; padding: 3px 10px; border-radius: 20px;
+    }
+    .tl-right, .tl-left { /* spacer */ }
+
+    /* ── AMADEUS JOURNEY ───────────────────────────────────────────── */
+    .journey-bg {
+      background: linear-gradient(135deg, var(--navy) 0%, #003580 100%);
+      padding: 96px 0;
+    }
+    .journey-bg h2 { color: var(--white); }
+    .journey-bg .section-tag { color: var(--cyan); }
+    .journey-bg .section-lead { color: rgba(255,255,255,0.6); }
+    .journey-cards {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin-top: 48px;
+    }
+    .journey-card {
+      background: rgba(255,255,255,0.07);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 20px; padding: 32px 28px;
+      position: relative; overflow: hidden;
+      transition: transform 0.2s, background 0.2s;
+    }
+    .journey-card:hover { transform: translateY(-4px); background: rgba(255,255,255,0.11); }
+    .journey-card::before {
+      content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+      background: linear-gradient(90deg, var(--cyan), var(--blue));
+    }
+    .journey-card.highlight::before { background: linear-gradient(90deg, var(--orange), #FF9A4D); }
+    .j-year { font-size: 0.72rem; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 0.1em; color: var(--cyan); margin-bottom: 8px; }
+    .journey-card.highlight .j-year { color: var(--orange); }
+    .j-title { font-size: 1.1rem; font-weight: 700; color: var(--white); margin-bottom: 12px; line-height: 1.3; }
+    .j-desc { font-size: 0.82rem; color: rgba(255,255,255,0.6); line-height: 1.7; }
+    .j-badge {
+      display: inline-block; margin-top: 16px;
+      background: rgba(0,160,223,0.2); border: 1px solid rgba(0,160,223,0.3);
+      color: var(--cyan); font-size: 0.7rem; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 0.06em;
+      padding: 4px 12px; border-radius: 20px;
+    }
+    .journey-card.highlight .j-badge {
+      background: rgba(255,107,43,0.2); border-color: rgba(255,107,43,0.3); color: var(--orange);
+    }
+
+    /* ── CHARTS / SKILLS ───────────────────────────────────────────── */
+    .charts-grid {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 32px; margin-top: 48px;
+    }
+    .chart-card {
+      background: var(--white); border-radius: 20px; padding: 32px;
+      box-shadow: 0 4px 24px rgba(0,32,91,0.07);
+    }
+    .chart-card.wide { grid-column: 1 / -1; }
+    .chart-title { font-size: 0.85rem; font-weight: 700; color: var(--navy);
+      text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 24px; }
+    .chart-wrap { position: relative; height: 280px; }
+
+    /* ── BAR SKILLS ────────────────────────────────────────────────── */
+    .skill-bars { display: flex; flex-direction: column; gap: 18px; margin-top: 8px; }
+    .skill-bar-row { }
+    .skill-bar-label {
+      display: flex; justify-content: space-between;
+      font-size: 0.82rem; font-weight: 600; color: var(--navy); margin-bottom: 8px;
+    }
+    .skill-bar-track {
+      height: 8px; background: var(--light); border-radius: 4px; overflow: hidden;
+    }
+    .skill-bar-fill {
+      height: 100%; border-radius: 4px;
+      background: linear-gradient(90deg, var(--blue), var(--cyan));
+      transition: width 1.2s cubic-bezier(0.4,0,0.2,1);
+    }
+    .skill-bar-fill.orange { background: linear-gradient(90deg, var(--orange), #FF9A4D); }
+
+    /* ── METRICS STRIP ─────────────────────────────────────────────── */
+    .metrics-strip {
+      background: linear-gradient(90deg, var(--blue) 0%, var(--cyan) 100%);
+      padding: 56px 0;
+    }
+    .metrics-inner {
+      max-width: 1200px; margin: 0 auto; padding: 0 48px;
+      display: grid; grid-template-columns: repeat(4, 1fr); gap: 0;
+    }
+    .metric {
+      text-align: center; padding: 0 24px;
+      border-right: 1px solid rgba(255,255,255,0.2);
+    }
+    .metric:last-child { border-right: none; }
+    .metric .m-num { font-size: 3rem; font-weight: 900; color: var(--white); line-height: 1; }
+    .metric .m-unit { font-size: 1.5rem; color: rgba(255,255,255,0.7); }
+    .metric .m-label { font-size: 0.8rem; color: rgba(255,255,255,0.75); font-weight: 500;
+      text-transform: uppercase; letter-spacing: 0.06em; margin-top: 8px; }
+
+    /* ── EDUCATION ─────────────────────────────────────────────────── */
+    .edu-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin-top: 48px; }
+    .edu-card {
+      background: var(--white); border-radius: 20px; padding: 32px 28px;
+      box-shadow: 0 4px 24px rgba(0,32,91,0.07);
+      border-bottom: 4px solid var(--navy);
+      display: flex; flex-direction: column; gap: 12px;
+      transition: transform 0.2s;
+    }
+    .edu-card:hover { transform: translateY(-4px); }
+    .edu-icon {
+      width: 48px; height: 48px; border-radius: 12px;
+      background: linear-gradient(135deg, var(--navy), var(--blue));
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.4rem;
+    }
+    .edu-period { font-size: 0.72rem; font-weight: 700; color: var(--gray);
+      text-transform: uppercase; letter-spacing: 0.07em; }
+    .edu-degree { font-size: 1rem; font-weight: 700; color: var(--navy); line-height: 1.3; }
+    .edu-school { font-size: 0.82rem; color: var(--blue); font-weight: 600; }
+    .edu-note { font-size: 0.78rem; color: var(--gray); line-height: 1.6; }
+
+    /* ── QUOTE ─────────────────────────────────────────────────────── */
+    .quote-section {
+      background: var(--offwhite); padding: 80px 48px; text-align: center;
+    }
+    .quote-inner { max-width: 700px; margin: 0 auto; }
+    .quote-mark { font-size: 6rem; color: var(--cyan); line-height: 0.5;
+      font-family: 'Playfair Display', serif; opacity: 0.4; margin-bottom: 16px; }
+    blockquote {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(1.3rem, 2.5vw, 1.7rem);
+      color: var(--navy); line-height: 1.5; margin-bottom: 24px;
+    }
+    .quote-author { font-size: 0.85rem; color: var(--gray); font-weight: 600; }
+    .quote-author span { color: var(--blue); }
+
+    /* ── CAREER CHART SECTION ──────────────────────────────────────── */
+    .career-timeline-chart {
+      background: var(--white); border-radius: 20px; padding: 40px;
+      box-shadow: 0 4px 24px rgba(0,32,91,0.07); margin-top: 48px;
+    }
+    .gantt { width: 100%; }
+    .gantt-row {
+      display: grid; grid-template-columns: 200px 1fr;
+      gap: 16px; align-items: center; margin-bottom: 16px;
+    }
+    .gantt-label { font-size: 0.8rem; font-weight: 600; color: var(--navy); text-align: right; }
+    .gantt-track { height: 32px; background: var(--light); border-radius: 6px;
+      position: relative; overflow: visible; }
+    .gantt-bar {
+      position: absolute; height: 100%; border-radius: 6px;
+      display: flex; align-items: center; padding: 0 10px;
+      font-size: 0.72rem; font-weight: 700; color: white; white-space: nowrap;
+      overflow: hidden;
+    }
+    .gantt-year-axis {
+      display: grid; grid-template-columns: 200px 1fr;
+      gap: 16px; margin-bottom: 8px;
+    }
+    .gantt-years {
+      display: flex; justify-content: space-between;
+      font-size: 0.7rem; color: var(--gray); font-weight: 600;
+    }
+
+    /* ── FOOTER ────────────────────────────────────────────────────── */
+    footer {
+      background: var(--navy); color: rgba(255,255,255,0.5);
+      text-align: center; padding: 40px 48px;
+      font-size: 0.82rem;
+    }
+    footer .footer-logo { font-family: 'Playfair Display', serif; font-size: 1.4rem;
+      color: var(--white); margin-bottom: 8px; }
+    footer .footer-logo span { color: var(--cyan); }
+    footer a { color: var(--cyan); text-decoration: none; }
+
+    /* ── RESPONSIVE ────────────────────────────────────────────────── */
+    @media (max-width: 900px) {
+      nav { padding: 0 24px; }
+      .nav-links { display: none; }
+      .hero-inner { grid-template-columns: 1fr; gap: 40px; }
+      .hero-right { display: none; }
+      section { padding: 64px 24px; }
+      .about-grid { grid-template-columns: 1fr; gap: 32px; }
+      .charts-grid { grid-template-columns: 1fr; }
+      .edu-grid { grid-template-columns: 1fr; }
+      .journey-cards { grid-template-columns: 1fr; }
+      .metrics-inner { grid-template-columns: 1fr 1fr; gap: 32px; }
+      .metric { border-right: none; }
+      .timeline::before { left: 20px; }
+      .tl-item { grid-template-columns: 0 40px 1fr; }
+      .tl-item:nth-child(odd) .tl-content { grid-column: 3; text-align: left; }
+      .tl-item:nth-child(odd) .tl-dot    { grid-column: 2; }
+      .tl-item:nth-child(odd) .tl-right  { display: none; }
+      .tl-item:nth-child(even) .tl-left  { display: none; }
+      .gantt-row { grid-template-columns: 120px 1fr; }
+      .gantt-year-axis { grid-template-columns: 120px 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── NAV ──────────────────────────────────────────────────────────── -->
+<nav>
+  <div class="nav-logo">Laura <span>Artal</span></div>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#career">Career</a></li>
+    <li><a href="#amadeus">Amadeus</a></li>
+    <li><a href="#skills">Skills</a></li>
+    <li><a href="#education">Education</a></li>
+  </ul>
+</nav>
+
+<!-- ── HERO ─────────────────────────────────────────────────────────── -->
+<section class="hero" id="top">
+  <div class="hero-inner">
+    <div class="hero-left">
+      <div class="hero-tag"><span class="dot"></span>Global Talent Leader · Madrid, Spain</div>
+      <h1>Laura<br/><span>Artal</span></h1>
+      <p class="hero-subtitle">
+        Associate Director of Global Talent Strategy at Amadeus IT Group — shaping how one of the world's leading travel-tech companies attracts, develops and retains its best people.
+      </p>
+      <div class="hero-pills">
+        <span class="pill">Talent Acquisition</span>
+        <span class="pill">HR Strategy</span>
+        <span class="pill">People Analytics</span>
+        <span class="pill">Leadership</span>
+        <span class="pill">Employer Branding</span>
+        <span class="pill">CoE Design</span>
+      </div>
+      <div class="hero-stats">
+        <div class="stat-card">
+          <div class="num">20<span>+</span></div>
+          <div class="lbl">Years in HR</div>
+        </div>
+        <div class="stat-card">
+          <div class="num">3</div>
+          <div class="lbl">Industries</div>
+        </div>
+        <div class="stat-card">
+          <div class="num">8<span>+</span></div>
+          <div class="lbl">Years at Amadeus</div>
+        </div>
+      </div>
+    </div>
+    <div class="hero-right">
+      <div class="avatar-ring">
+        <div class="avatar-initials">LA</div>
+      </div>
+      <div class="hero-card">
+        <div class="label">Current Role</div>
+        <div class="value">Global Talent Strategy<br/>Associate Director · Amadeus</div>
+      </div>
+      <div class="hero-card">
+        <div class="label">Location</div>
+        <div class="value">Madrid, Spain · Open to Global Scope</div>
+      </div>
+      <div class="hero-card">
+        <div class="label">Languages</div>
+        <div class="value">Spanish (Native) · English (Professional)</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── METRICS STRIP ─────────────────────────────────────────────────── -->
+<div class="metrics-strip">
+  <div class="metrics-inner">
+    <div class="metric">
+      <div class="m-num">20<span class="m-unit">+</span></div>
+      <div class="m-label">Years of HR Experience</div>
+    </div>
+    <div class="metric">
+      <div class="m-num">10</div>
+      <div class="m-label">Years at Linklaters</div>
+    </div>
+    <div class="metric">
+      <div class="m-num">8<span class="m-unit">+</span></div>
+      <div class="m-label">Years at Amadeus</div>
+    </div>
+    <div class="metric">
+      <div class="m-num">500<span class="m-unit">+</span></div>
+      <div class="m-label">LinkedIn Connections</div>
+    </div>
+  </div>
+</div>
+
+<!-- ── ABOUT ─────────────────────────────────────────────────────────── -->
+<section id="about">
+  <div class="section-tag">About</div>
+  <h2>Structured. Strategic.<br/>People-first.</h2>
+  <p class="section-lead">A talent professional with a track record of building world-class HR functions across law, finance and technology.</p>
+  <div class="about-grid">
+    <div class="about-text">
+      <p>Laura Artal is a seasoned Human Resources and Talent Acquisition leader with more than two decades of experience across highly demanding professional environments — from Magic Circle law firm Linklaters to global investment bank Merrill Lynch, and now one of the world's largest travel-technology companies, Amadeus IT Group.</p>
+      <p>Her career is defined by a rare combination of operational rigour and strategic vision. She is passionate about talent — not just filling roles, but designing the systems, frameworks and cultures that allow organisations to attract and retain exceptional people at scale.</p>
+      <p>At Amadeus, Laura has progressed from Global Talent Acquisition Manager through Head of Talent Acquisition Strategy to her current role leading Global Talent Strategy as Associate Director — building a Talent Acquisition Centre of Excellence along the way.</p>
+      <div class="about-values">
+        <div class="value-item">
+          <div class="v-title">Structured Thinking</div>
+          <div class="v-desc">Frameworks over ad-hoc. Process over chaos.</div>
+        </div>
+        <div class="value-item">
+          <div class="v-title">Data-Driven</div>
+          <div class="v-desc">Evidence-based decisions in every HR initiative.</div>
+        </div>
+        <div class="value-item">
+          <div class="v-title">People-Centric</div>
+          <div class="v-desc">Passionate about human potential and growth.</div>
+        </div>
+        <div class="value-item">
+          <div class="v-title">Global Mindset</div>
+          <div class="v-desc">Cross-cultural experience across multiple geographies.</div>
+        </div>
+      </div>
+    </div>
+    <div class="about-right">
+      <div class="info-row">
+        <div class="info-icon">📍</div>
+        <div><div class="i-label">Location</div><div class="i-value">Madrid, Spain</div></div>
+      </div>
+      <div class="info-row">
+        <div class="info-icon">🎓</div>
+        <div><div class="i-label">Education</div><div class="i-value">ICADE · IESE Business School</div></div>
+      </div>
+      <div class="info-row">
+        <div class="info-icon">🌐</div>
+        <div><div class="i-label">Languages</div><div class="i-value">Spanish · English</div></div>
+      </div>
+      <div class="info-row">
+        <div class="info-icon">🏢</div>
+        <div><div class="i-label">Current Employer</div><div class="i-value">Amadeus IT Group</div></div>
+      </div>
+      <div class="info-row">
+        <div class="info-icon">⭐</div>
+        <div><div class="i-label">LinkedIn Followers</div><div class="i-value">3,000+</div></div>
+      </div>
+      <div class="info-row">
+        <div class="info-icon">💡</div>
+        <div><div class="i-label">Passion</div><div class="i-value">Talent Acquisition & HR Strategy</div></div>
+      </div>
+      <div class="info-row">
+        <div class="info-icon">🏆</div>
+        <div><div class="i-label">Peer Recognition</div><div class="i-value">4 LinkedIn Recommendations</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── CAREER TIMELINE ────────────────────────────────────────────────── -->
+<div class="timeline-bg" id="career">
+  <div class="section-full-inner">
+    <div class="section-tag">Career Path</div>
+    <h2>A Journey Built<br/>on Consistent Growth</h2>
+    <p class="section-lead">From early HR generalist roles to leading global talent strategy at a Fortune 500 tech company.</p>
+
+    <!-- Gantt Chart -->
+    <div class="career-timeline-chart">
+      <div class="chart-title">Career Tenure Overview (Years)</div>
+      <div class="gantt">
+        <div class="gantt-year-axis">
+          <div></div>
+          <div class="gantt-years" id="gantt-years"></div>
+        </div>
+        <!-- Merrill Lynch -->
+        <div class="gantt-row">
+          <div class="gantt-label">Merrill Lynch</div>
+          <div class="gantt-track" id="track-ml"></div>
+        </div>
+        <!-- ICAI-ICADE -->
+        <div class="gantt-row">
+          <div class="gantt-label">Univ. Comillas</div>
+          <div class="gantt-track" id="track-uc"></div>
+        </div>
+        <!-- Linklaters -->
+        <div class="gantt-row">
+          <div class="gantt-label">Linklaters</div>
+          <div class="gantt-track" id="track-ll"></div>
+        </div>
+        <!-- Amadeus TA Manager -->
+        <div class="gantt-row">
+          <div class="gantt-label">Amadeus — TA Mgr</div>
+          <div class="gantt-track" id="track-am1"></div>
+        </div>
+        <!-- Amadeus Head -->
+        <div class="gantt-row">
+          <div class="gantt-label">Amadeus — Head TA</div>
+          <div class="gantt-track" id="track-am2"></div>
+        </div>
+        <!-- Amadeus AD -->
+        <div class="gantt-row">
+          <div class="gantt-label">Amadeus — Assoc. Dir</div>
+          <div class="gantt-track" id="track-am3"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Timeline -->
+    <div class="timeline" style="margin-top:64px;">
+
+      <!-- Merrill Lynch -->
+      <div class="tl-item">
+        <div class="tl-content navy">
+          <div class="tl-period">Early Career · ~2003–2006</div>
+          <div class="tl-company">Merrill Lynch · Madrid</div>
+          <div class="tl-role">Junior HR Generalist</div>
+          <div class="tl-desc">First professional steps in Human Resources within a global investment banking environment. Built foundational skills in HR operations, employee relations and talent management in a demanding, high-performance culture.</div>
+          <div class="tl-tags">
+            <span class="tl-tag">HR Operations</span>
+            <span class="tl-tag">Employee Relations</span>
+            <span class="tl-tag">Banking</span>
+          </div>
+        </div>
+        <div class="tl-dot"><div class="tl-dot-inner navy"></div></div>
+        <div class="tl-right"></div>
+      </div>
+
+      <!-- ICADE -->
+      <div class="tl-item">
+        <div class="tl-left"></div>
+        <div class="tl-dot"><div class="tl-dot-inner"></div></div>
+        <div class="tl-content">
+          <div class="tl-period">Mid Career · ~2004–2006</div>
+          <div class="tl-company">Universidad Pontificia Comillas ICAI-ICADE · Madrid</div>
+          <div class="tl-role">HR Advisor</div>
+          <div class="tl-desc">Provided HR advisory services at one of Spain's most prestigious business universities — combining academic rigour with practical HR guidance for staff and faculty, deepening expertise in policy, compliance and people development.</div>
+          <div class="tl-tags">
+            <span class="tl-tag">HR Advisory</span>
+            <span class="tl-tag">Academia</span>
+            <span class="tl-tag">Policy</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Linklaters -->
+      <div class="tl-item">
+        <div class="tl-content orange">
+          <div class="tl-period">May 2006 – June 2016 · 10 Years</div>
+          <div class="tl-company">Linklaters · Madrid</div>
+          <div class="tl-role">HR Manager</div>
+          <div class="tl-desc">A full decade at one of the world's leading Magic Circle law firms. As HR Manager, Laura oversaw the full spectrum of people operations for the Madrid office — from recruitment and onboarding to performance management, learning & development, compensation, and employee engagement. The complexity and standards of a top-tier international law firm shaped her into a disciplined, process-driven HR leader.</div>
+          <div class="tl-tags">
+            <span class="tl-tag">Full HR Lifecycle</span>
+            <span class="tl-tag">Performance Mgmt</span>
+            <span class="tl-tag">L&D</span>
+            <span class="tl-tag">Legal Sector</span>
+            <span class="tl-tag">10 Years</span>
+          </div>
+        </div>
+        <div class="tl-dot"><div class="tl-dot-inner orange"></div></div>
+        <div class="tl-right"></div>
+      </div>
+
+      <!-- Amadeus TA Manager -->
+      <div class="tl-item">
+        <div class="tl-left"></div>
+        <div class="tl-dot"><div class="tl-dot-inner"></div></div>
+        <div class="tl-content">
+          <div class="tl-period">July 2016 – June 2023 · 7 Years</div>
+          <div class="tl-company">Amadeus IT Group · Madrid</div>
+          <div class="tl-role">Global Talent Acquisition Manager</div>
+          <div class="tl-desc">Transitioned into the travel-tech sector, joining Amadeus as Global Talent Acquisition Manager. Led end-to-end recruiting for complex technical and corporate roles across multiple geographies. Built scalable talent pipelines, implemented structured interviewing frameworks, and drove employer branding initiatives that positioned Amadeus as an employer of choice in competitive tech markets.</div>
+          <div class="tl-tags">
+            <span class="tl-tag">Global Recruiting</span>
+            <span class="tl-tag">Tech Hiring</span>
+            <span class="tl-tag">Employer Branding</span>
+            <span class="tl-tag">7 Years</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Amadeus Head of TA Strategy -->
+      <div class="tl-item">
+        <div class="tl-content">
+          <div class="tl-period">July 2023 – February 2024</div>
+          <div class="tl-company">Amadeus IT Group · Madrid</div>
+          <div class="tl-role">Head of Talent Acquisition Strategy</div>
+          <div class="tl-desc">Elevated to Head of Talent Acquisition Strategy — a role focused on shaping the future direction of talent acquisition at Amadeus. Responsible for designing strategic frameworks, defining best practices, and aligning hiring with long-term business objectives. Began building the foundations of the TA Centre of Excellence.</div>
+          <div class="tl-tags">
+            <span class="tl-tag">TA Strategy</span>
+            <span class="tl-tag">CoE Design</span>
+            <span class="tl-tag">Framework Design</span>
+          </div>
+        </div>
+        <div class="tl-dot"><div class="tl-dot-inner"></div></div>
+        <div class="tl-right"></div>
+      </div>
+
+      <!-- Amadeus Associate Director -->
+      <div class="tl-item">
+        <div class="tl-left"></div>
+        <div class="tl-dot"><div class="tl-dot-inner orange"></div></div>
+        <div class="tl-content orange">
+          <div class="tl-period">March 2024 – Present</div>
+          <div class="tl-company">Amadeus IT Group · Madrid</div>
+          <div class="tl-role">Global Talent Strategy — Associate Director</div>
+          <div class="tl-desc">In her current and most senior role, Laura leads the Global Talent Strategy function and the Talent Acquisition Centre of Excellence at Amadeus. She is accountable for shaping the global talent acquisition strategy, driving standardisation and excellence across all hiring markets, and ensuring Amadeus has the talent it needs to power the future of travel technology.</div>
+          <div class="tl-tags">
+            <span class="tl-tag">Global Strategy</span>
+            <span class="tl-tag">Associate Director</span>
+            <span class="tl-tag">TA CoE</span>
+            <span class="tl-tag">Leadership</span>
+            <span class="tl-tag">Current</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ── AMADEUS JOURNEY ─────────────────────────────────────────────────── -->
+<div class="journey-bg" id="amadeus">
+  <div class="section-full-inner">
+    <div class="section-tag">Inside Amadeus</div>
+    <h2>8+ Years of Continuous<br/>Growth at Amadeus</h2>
+    <p class="section-lead">A progression from individual contributor to strategic leader, driving global talent transformation within a world-leading travel-tech company.</p>
+    <div class="journey-cards">
+      <div class="journey-card">
+        <div class="j-year">2016 – 2023 · 7 Years</div>
+        <div class="j-title">Global Talent Acquisition Manager</div>
+        <div class="j-desc">Built and executed global recruiting strategies across multiple business units and geographies. Established rigorous, structured hiring processes and drove Amadeus's employer brand in competitive tech markets across Europe, Asia and the Americas.</div>
+        <span class="j-badge">Foundation Role</span>
+      </div>
+      <div class="journey-card">
+        <div class="j-year">2023 – 2024 · 8 Months</div>
+        <div class="j-title">Head of Talent Acquisition Strategy</div>
+        <div class="j-desc">Moved from execution to strategy. Designed talent acquisition frameworks, defined best-in-class hiring standards, and began architecting the TA Centre of Excellence — a global function to standardise and elevate talent acquisition across all of Amadeus.</div>
+        <span class="j-badge">Strategic Pivot</span>
+      </div>
+      <div class="journey-card highlight">
+        <div class="j-year">2024 – Present</div>
+        <div class="j-title">Associate Director, Global Talent Strategy</div>
+        <div class="j-desc">Laura's current and most senior role. Leads the Global Talent Strategy function and the Talent Acquisition CoE, setting the agenda for how Amadeus identifies, attracts and develops talent globally to support one of the world's most complex travel-technology ecosystems.</div>
+        <span class="j-badge">Current · Director Level</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── SKILLS & CHARTS ─────────────────────────────────────────────────── -->
+<section id="skills">
+  <div class="section-tag">Expertise</div>
+  <h2>Skills &amp; Areas<br/>of Mastery</h2>
+  <p class="section-lead">Two decades of experience forged across banking, law, and technology have produced a rare, multi-dimensional HR leader.</p>
+
+  <div class="charts-grid">
+    <!-- Radar chart -->
+    <div class="chart-card">
+      <div class="chart-title">Core HR Competencies</div>
+      <div class="chart-wrap">
+        <canvas id="radarChart"></canvas>
+      </div>
+    </div>
+
+    <!-- Doughnut: Industry split -->
+    <div class="chart-card">
+      <div class="chart-title">Career by Industry (Years)</div>
+      <div class="chart-wrap">
+        <canvas id="doughnutChart"></canvas>
+      </div>
+    </div>
+
+    <!-- Skill bars -->
+    <div class="chart-card wide">
+      <div class="chart-title">Skill Proficiency</div>
+      <div class="skill-bars">
+        <div class="skill-bar-row">
+          <div class="skill-bar-label"><span>Talent Acquisition Strategy</span><span>98%</span></div>
+          <div class="skill-bar-track"><div class="skill-bar-fill" style="width:98%"></div></div>
+        </div>
+        <div class="skill-bar-row">
+          <div class="skill-bar-label"><span>Performance Management</span><span>92%</span></div>
+          <div class="skill-bar-track"><div class="skill-bar-fill" style="width:92%"></div></div>
+        </div>
+        <div class="skill-bar-row">
+          <div class="skill-bar-label"><span>Employee Engagement</span><span>90%</span></div>
+          <div class="skill-bar-track"><div class="skill-bar-fill" style="width:90%"></div></div>
+        </div>
+        <div class="skill-bar-row">
+          <div class="skill-bar-label"><span>HR Strategy &amp; CoE Design</span><span>95%</span></div>
+          <div class="skill-bar-track"><div class="skill-bar-fill orange" style="width:95%"></div></div>
+        </div>
+        <div class="skill-bar-row">
+          <div class="skill-bar-label"><span>Employer Branding</span><span>88%</span></div>
+          <div class="skill-bar-track"><div class="skill-bar-fill" style="width:88%"></div></div>
+        </div>
+        <div class="skill-bar-row">
+          <div class="skill-bar-label"><span>Personnel &amp; Employee Relations</span><span>94%</span></div>
+          <div class="skill-bar-track"><div class="skill-bar-fill orange" style="width:94%"></div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bar chart: career progression -->
+    <div class="chart-card wide">
+      <div class="chart-title">Tenure by Organisation (Years)</div>
+      <div class="chart-wrap">
+        <canvas id="barChart"></canvas>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── QUOTE ──────────────────────────────────────────────────────────── -->
+<div class="quote-section">
+  <div class="quote-inner">
+    <div class="quote-mark">"</div>
+    <blockquote>
+      Passionate about Talent — believing that the right people, in the right roles, with the right support, can transform any organisation.
+    </blockquote>
+    <div class="quote-author">— <span>Laura Artal</span>, Global Talent Strategy · Amadeus IT Group</div>
+  </div>
+</div>
+
+<!-- ── EDUCATION ──────────────────────────────────────────────────────── -->
+<section id="education">
+  <div class="section-tag">Education</div>
+  <h2>Academic Foundations<br/>of a Strategic Leader</h2>
+  <p class="section-lead">A blend of business administration, management development and real-world expertise from Spain's most prestigious institutions.</p>
+  <div class="edu-grid">
+    <div class="edu-card">
+      <div class="edu-icon">🎓</div>
+      <div class="edu-period">2013 – 2014</div>
+      <div class="edu-degree">General Management Programme (PDD)</div>
+      <div class="edu-school">IESE Business School – University of Navarra</div>
+      <div class="edu-note">The Programa de Desarrollo Directivo at IESE is one of Spain's most prestigious executive education programmes, designed for senior leaders seeking to broaden their strategic and management capabilities. Demonstrates Laura's commitment to continuous growth at the director level.</div>
+    </div>
+    <div class="edu-card">
+      <div class="edu-icon">📚</div>
+      <div class="edu-period">Undergraduate Degree</div>
+      <div class="edu-degree">Bachelor's in Business Administration</div>
+      <div class="edu-school">Universidad Pontificia Comillas – ICADE</div>
+      <div class="edu-note">ICADE is consistently ranked among Spain's top business schools. Laura's degree in Business Administration provided a rigorous grounding in economics, management, organisational behaviour and strategy — the analytical backbone of her entire HR career.</div>
+    </div>
+    <div class="edu-card">
+      <div class="edu-icon">🏫</div>
+      <div class="edu-period">1995 – 2000</div>
+      <div class="edu-degree">Secondary Education (Bachillerato)</div>
+      <div class="edu-school">Madrid, Spain</div>
+      <div class="edu-note">Early academic formation in Madrid, completing secondary education before pursuing higher studies in business and management at ICADE. A structured, disciplined academic trajectory reflecting the organised, methodical approach that defines her professional style.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ── FOOTER ──────────────────────────────────────────────────────────── -->
+<footer>
+  <div class="footer-logo">Laura <span>Artal</span></div>
+  <p>Global Talent Strategy, Associate Director · Amadeus IT Group · Madrid, Spain</p>
+  <br/>
+  <p>
+    <a href="https://es.linkedin.com/in/lauraartal" target="_blank">LinkedIn Profile</a>
+    &nbsp;·&nbsp;
+    <a href="https://amadeus.com" target="_blank">Amadeus IT Group</a>
+  </p>
+  <br/>
+  <p style="font-size:0.75rem;opacity:0.5;">Professional profile website · All information sourced from public professional records.</p>
+</footer>
+
+<!-- ── SCRIPTS ─────────────────────────────────────────────────────────── -->
+<script>
+  /* ── Gantt Chart ─────────────────────────────────────────────── */
+  (function() {
+    const START_YEAR = 2002;
+    const END_YEAR   = 2026;
+    const TOTAL      = END_YEAR - START_YEAR;
+
+    // year axis labels
+    const yearsEl = document.getElementById('gantt-years');
+    for (let y = START_YEAR; y <= END_YEAR; y += 4) {
+      const span = document.createElement('span');
+      span.textContent = y;
+      yearsEl.appendChild(span);
+    }
+
+    const colors = {
+      navy:   '#00205B',
+      blue:   '#0076C0',
+      cyan:   '#00A0DF',
+      orange: '#FF6B2B',
+    };
+
+    function makeBar(trackId, startYear, endYear, color, label) {
+      const track = document.getElementById(trackId);
+      const bar = document.createElement('div');
+      bar.className = 'gantt-bar';
+      const left  = ((startYear - START_YEAR) / TOTAL) * 100;
+      const width = ((endYear - startYear) / TOTAL) * 100;
+      bar.style.left       = left + '%';
+      bar.style.width      = width + '%';
+      bar.style.background = color;
+      bar.textContent      = label;
+      track.appendChild(bar);
+    }
+
+    makeBar('track-ml',  2003, 2006, colors.navy,   'Junior HR Generalist');
+    makeBar('track-uc',  2004, 2006, colors.blue,   'HR Advisor');
+    makeBar('track-ll',  2006, 2016, colors.orange, 'HR Manager · 10 yrs');
+    makeBar('track-am1', 2016, 2023, colors.cyan,   'Global TA Manager · 7 yrs');
+    makeBar('track-am2', 2023, 2024, colors.blue,   'Head TA Strategy');
+    makeBar('track-am3', 2024, 2026, colors.orange, 'Associate Director');
+  })();
+
+  /* ── Chart.js defaults ───────────────────────────────────────── */
+  Chart.defaults.font.family = 'Inter, sans-serif';
+  Chart.defaults.color = '#6B7280';
+
+  /* ── Radar Chart ─────────────────────────────────────────────── */
+  new Chart(document.getElementById('radarChart'), {
+    type: 'radar',
+    data: {
+      labels: [
+        'Talent Acquisition',
+        'HR Strategy',
+        'Performance Mgmt',
+        'Employee Engagement',
+        'Employer Branding',
+        'CoE Design',
+        'Employee Relations',
+        'People Analytics'
+      ],
+      datasets: [{
+        label: 'Proficiency',
+        data: [98, 95, 92, 90, 88, 94, 93, 85],
+        backgroundColor: 'rgba(0,160,223,0.15)',
+        borderColor: '#00A0DF',
+        borderWidth: 2,
+        pointBackgroundColor: '#FF6B2B',
+        pointBorderColor: '#fff',
+        pointBorderWidth: 2,
+        pointRadius: 5,
+      }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      scales: {
+        r: {
+          min: 60, max: 100,
+          ticks: { stepSize: 10, font: { size: 9 } },
+          grid: { color: 'rgba(0,32,91,0.08)' },
+          pointLabels: { font: { size: 10, weight: '600' }, color: '#00205B' }
+        }
+      },
+      plugins: { legend: { display: false } }
+    }
+  });
+
+  /* ── Doughnut Chart ──────────────────────────────────────────── */
+  new Chart(document.getElementById('doughnutChart'), {
+    type: 'doughnut',
+    data: {
+      labels: ['Linklaters (Law)', 'Amadeus (Tech)', 'Merrill Lynch (Finance)', 'Univ. Comillas'],
+      datasets: [{
+        data: [10, 9, 3, 2],
+        backgroundColor: ['#FF6B2B', '#00205B', '#0076C0', '#00A0DF'],
+        borderColor: '#fff',
+        borderWidth: 3,
+        hoverOffset: 8,
+      }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      cutout: '65%',
+      plugins: {
+        legend: {
+          position: 'right',
+          labels: { font: { size: 11, weight: '500' }, padding: 16 }
+        }
+      }
+    }
+  });
+
+  /* ── Bar Chart ───────────────────────────────────────────────── */
+  new Chart(document.getElementById('barChart'), {
+    type: 'bar',
+    data: {
+      labels: ['Merrill Lynch', 'Univ. Comillas', 'Linklaters', 'Amadeus (TA Mgr)', 'Amadeus (Head TA)', 'Amadeus (Assoc. Dir)'],
+      datasets: [{
+        label: 'Years',
+        data: [3, 2, 10, 7, 0.7, 2],
+        backgroundColor: [
+          '#00205B', '#0076C0', '#FF6B2B',
+          '#00A0DF', '#0076C0', '#FF6B2B'
+        ],
+        borderRadius: 8,
+        borderSkipped: false,
+      }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { display: false } },
+      scales: {
+        y: {
+          beginAtZero: true,
+          ticks: { callback: v => v + ' yrs' },
+          grid: { color: 'rgba(0,32,91,0.06)' }
+        },
+        x: {
+          grid: { display: false },
+          ticks: { font: { size: 11 } }
+        }
+      }
+    }
+  });
+</script>
+</body>
+</html>
