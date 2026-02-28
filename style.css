@@ -1,0 +1,49 @@
+:root {
+  color-scheme: dark;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  background: radial-gradient(circle at top, #21314f, #0d1320 65%);
+  color: #f8f4e7;
+  font-family: "Segoe UI", system-ui, sans-serif;
+}
+
+.game-wrapper {
+  text-align: center;
+  padding: 1.2rem;
+}
+
+h1 {
+  margin: 0 0 0.2rem;
+  color: #ffd369;
+}
+
+p {
+  margin: 0 0 1rem;
+  opacity: 0.9;
+}
+
+canvas {
+  border: 4px solid #ffd369;
+  border-radius: 12px;
+  background: linear-gradient(#18253d, #101827);
+  box-shadow: 0 20px 40px rgb(0 0 0 / 35%);
+  max-width: 100%;
+  height: auto;
+}
+
+.hud {
+  margin-top: 0.8rem;
+  display: flex;
+  justify-content: center;
+  gap: 1.5rem;
+  font-weight: 700;
+}

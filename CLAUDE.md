@@ -13,7 +13,11 @@ This repository is currently being initialized. Update this section as the proje
 
 ```
 Claude/
-└── CLAUDE.md        # AI assistant guidance (this file)
+├── CLAUDE.md        # AI assistant guidance
+├── index.html       # Página principal del juego
+├── style.css        # Estilos del juego
+├── script.js        # Lógica de Arkanoid
+└── beagle.svg       # Imagen de beagle usada como plataforma
 ```
 
 Update this tree as directories and files are added.
@@ -84,10 +88,10 @@ Document commands here as they are established:
 
 ```bash
 # Install dependencies
-# <command>
+# No dependencies required
 
 # Run development server
-# <command>
+python3 -m http.server 8000
 
 # Run tests
 # <command>
