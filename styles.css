@@ -1,0 +1,78 @@
+:root {
+  color-scheme: dark;
+  --bg: #07080f;
+  --panel: #12162a;
+  --text: #eef1ff;
+  --muted: #a4acc9;
+  --accent: #7cf0d4;
+  --accent-2: #b18cff;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-family: Inter, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+  background: radial-gradient(circle at top, #1f2650 0%, var(--bg) 48%);
+  color: var(--text);
+  display: grid;
+  place-items: center;
+  padding: 1.25rem;
+}
+
+.denuncia {
+  width: min(860px, 100%);
+  background: linear-gradient(175deg, #1a1f38 0%, var(--panel) 100%);
+  border: 1px solid #2d3564;
+  border-radius: 16px;
+  padding: 2rem;
+  box-shadow: 0 18px 52px rgba(0, 0, 0, 0.45);
+}
+
+.etiqueta {
+  display: inline-block;
+  margin: 0 0 0.75rem;
+  color: #07101c;
+  background: linear-gradient(90deg, var(--accent), var(--accent-2));
+  padding: 0.25rem 0.65rem;
+  border-radius: 999px;
+  font-weight: 700;
+  font-size: 0.85rem;
+}
+
+h1,
+h2 {
+  line-height: 1.2;
+}
+
+h1 {
+  margin-top: 0;
+  margin-bottom: 1rem;
+  font-size: clamp(1.5rem, 3.4vw, 2.4rem);
+}
+
+h2 {
+  margin: 1.4rem 0 0.5rem;
+  color: var(--accent);
+  font-size: 1.15rem;
+}
+
+p,
+li {
+  color: var(--muted);
+  line-height: 1.6;
+}
+
+strong {
+  color: var(--text);
+}
+
+.aviso {
+  margin-top: 1.5rem;
+  font-size: 0.92rem;
+  border-top: 1px dashed #46538d;
+  padding-top: 1rem;
+}

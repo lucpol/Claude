@@ -13,7 +13,9 @@ This repository is currently being initialized. Update this section as the proje
 
 ```
 Claude/
-└── CLAUDE.md        # AI assistant guidance (this file)
+├── CLAUDE.md        # AI assistant guidance (this file)
+├── index.html       # Página web estática principal
+└── styles.css       # Estilos de la página
 ```
 
 Update this tree as directories and files are added.
@@ -87,7 +89,7 @@ Document commands here as they are established:
 # <command>
 
 # Run development server
-# <command>
+# python3 -m http.server 8000
 
 # Run tests
 # <command>
