@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DENUNCIA ANÓNIMA | Canyon Aeroad CFR Black Cosmos vs. "Cipote"</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <style>
+    :root {
+      --negro: #0a0a0a; --cosmos: #1a1a2e; --azul: #16213e;
+      --acento: #e94560; --oro: #f5a623; --verde: #0f9b58;
+      --gris: #c9c9c9; --blanco: #f0f0f0; --esparadrapo: #f5deb3;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { background: var(--cosmos); color: var(--blanco); font-family: 'Courier New', monospace; line-height: 1.7; }
+    .banner {
+      background: repeating-linear-gradient(45deg,#000 0px,#000 20px,var(--acento) 20px,var(--acento) 40px);
+      color:#fff; text-align:center; padding:14px; font-size:1rem; font-weight:bold; letter-spacing:2px;
+      animation: pulse 1s infinite alternate;
+    }
+    @keyframes pulse { from{opacity:1}to{opacity:.7} }
+    .hero {
+      background: radial-gradient(ellipse at top,#16213e 0%,#0a0a0a 70%);
+      padding:60px 20px 40px; text-align:center; border-bottom:4px solid var(--acento);
+    }
+    .hero-badge {
+      display:inline-block; background:var(--acento); color:#fff;
+      font-size:.75rem; letter-spacing:4px; padding:5px 18px; border-radius:2px; margin-bottom:20px;
+    }
+    .hero h1 { font-size:clamp(1.8rem,5vw,3.2rem); line-height:1.2; margin-bottom:16px; text-shadow:0 0 30px var(--acento); }
+    .hero h1 span { color:var(--acento); }
+    .hero-sub { font-size:1.05rem; color:var(--gris); max-width:700px; margin:0 auto 30px; }
+    .bici { font-size:6rem; display:block; margin:20px auto; filter:drop-shadow(0 0 20px var(--acento)); animation:wobble 3s ease-in-out infinite; }
+    @keyframes wobble { 0%,100%{transform:rotate(-3deg)}50%{transform:rotate(3deg)} }
+    .expediente { display:inline-block; border:2px solid var(--oro); color:var(--oro); padding:10px 30px; font-size:.85rem; letter-spacing:3px; margin-top:20px; }
+    .metricas { display:flex; justify-content:center; gap:40px; flex-wrap:wrap; margin-top:30px; padding:20px; background:rgba(0,0,0,.3); border:1px solid #333; border-radius:8px; max-width:800px; margin-left:auto; margin-right:auto; }
+    .m { text-align:center; }
+    .m-val { font-size:2rem; font-weight:bold; color:var(--acento); display:block; }
+    .m-lab { font-size:.75rem; color:var(--gris); letter-spacing:1px; }
+    .container { max-width:1100px; margin:0 auto; padding:0 20px; }
+    section { padding:60px 20px; border-bottom:1px solid #222; }
+    .sec-title {
+      font-size:1.5rem; color:var(--acento); letter-spacing:3px; text-transform:uppercase;
+      margin-bottom:30px; display:flex; align-items:center; gap:12px;
+    }
+    .sec-title::after { content:''; flex:1; height:2px; background:var(--acento); opacity:.3; }
+    .grid2 { display:grid; grid-template-columns:1fr 1fr; gap:30px; }
+    @media(max-width:600px){ .grid2{grid-template-columns:1fr} }
+    .card {
+      background:#111827; border:1px solid #333; border-left:4px solid var(--acento); border-radius:6px; padding:24px;
+    }
+    .card h3 { color:var(--oro); margin-bottom:14px; font-size:1.1rem; }
+    .dato { display:flex; justify-content:space-between; padding:6px 0; border-bottom:1px solid #222; }
+    .dato:last-child{border-bottom:none}
+    .dl { color:var(--gris); font-size:.9rem; }
+    .dv { color:var(--blanco); font-weight:bold; }
+    .dv.malo { color:var(--acento); }
+    .dv.bueno { color:var(--verde); }
+    .info-box { background:rgba(245,166,35,.08); border:1px solid var(--oro); border-radius:6px; padding:16px 20px; margin:20px 0; font-size:.88rem; color:var(--gris); }
+    .info-box strong { color:var(--oro); }
+    .tl { position:relative; padding-left:40px; }
+    .tl::before { content:''; position:absolute; left:12px; top:0; bottom:0; width:3px; background:linear-gradient(to bottom,var(--acento),transparent); }
+    .tl-item { position:relative; margin-bottom:32px; }
+    .tl-item::before { content:''; position:absolute; left:-35px; top:6px; width:14px; height:14px; border-radius:50%; background:var(--acento); border:2px solid var(--cosmos); box-shadow:0 0 10px var(--acento); }
+    .tl-hora { color:var(--acento); font-size:.85rem; letter-spacing:2px; margin-bottom:4px; }
+    .tl-t { color:var(--oro); font-weight:bold; margin-bottom:6px; }
+    .tl-d { color:var(--gris); font-size:.92rem; }
+    .tl-grave { background:rgba(233,69,96,.1); border-left:3px solid var(--acento); padding:10px 14px; border-radius:4px; }
+    .charts-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(300px,1fr)); gap:30px; margin-top:20px; }
+    .chart-card { background:#111827; border:1px solid #333; border-radius:8px; padding:24px; }
+    .chart-card h4 { color:var(--oro); font-size:.85rem; letter-spacing:2px; text-transform:uppercase; margin-bottom:20px; text-align:center; }
+    canvas { max-height:280px; }
+    .cov-lab { font-size:.85rem; color:var(--gris); margin-bottom:4px; }
+    .cov-bar { background:#222; border-radius:4px; height:30px; overflow:hidden; margin:8px 0; }
+    .cov-fill {
+      height:100%;
+      background:repeating-linear-gradient(90deg,var(--esparadrapo) 0px,var(--esparadrapo) 18px,#c4a882 18px,#c4a882 20px);
+      display:flex; align-items:center; justify-content:flex-end; padding-right:8px; color:#000; font-size:.8rem; font-weight:bold;
+    }
+    .escala-item { display:flex; align-items:center; gap:16px; padding:12px 0; border-bottom:1px solid #222; }
+    .esc-num { width:46px; height:46px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:bold; font-size:1.2rem; flex-shrink:0; }
+    .esc-desc strong { display:block; color:var(--blanco); margin-bottom:2px; }
+    .esc-desc span { color:var(--gris); font-size:.83rem; }
+    .esc-pointer { background:var(--acento); color:#fff; font-size:.7rem; padding:2px 10px; border-radius:10px; animation:pulse 1s infinite alternate; }
+    .arts { display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:20px; margin-top:20px; }
+    .art { background:#0d1117; border:1px solid var(--acento); border-radius:6px; padding:20px; }
+    .art-num { color:var(--acento); font-size:.75rem; letter-spacing:3px; margin-bottom:8px; }
+    .art-t { color:var(--blanco); font-weight:bold; margin-bottom:10px; }
+    .art-txt { color:var(--gris); font-size:.85rem; }
+    .art-v { display:inline-block; background:var(--acento); color:#fff; font-size:.7rem; padding:2px 10px; border-radius:10px; margin-top:10px; letter-spacing:1px; }
+    .codigo { background:#0d1117; border:1px solid #333; border-radius:6px; padding:20px; font-family:'Courier New',monospace; font-size:.85rem; color:#39ff14; margin:20px 0; overflow-x:auto; }
+    .codigo .kw{color:#ff79c6} .codigo .str{color:var(--oro)} .codigo .cm{color:#666} .codigo .num{color:#bd93f9}
+    .wf { display:flex; flex-direction:column; gap:0; max-width:700px; margin:0 auto; }
+    .wf-step { display:flex; gap:20px; }
+    .wf-left { display:flex; flex-direction:column; align-items:center; min-width:50px; }
+    .wf-circle { width:46px; height:46px; border-radius:50%; background:var(--azul); border:2px solid var(--acento); display:flex; align-items:center; justify-content:center; font-size:1.3rem; flex-shrink:0; z-index:1; }
+    .wf-line { width:2px; flex:1; background:linear-gradient(to bottom,var(--acento) 0%,#333 100%); min-height:40px; }
+    .wf-content { background:#111827; border:1px solid #333; border-radius:6px; padding:16px 20px; margin-bottom:16px; flex:1; }
+    .wf-content h4 { color:var(--oro); margin-bottom:6px; }
+    .wf-content p { color:var(--gris); font-size:.88rem; }
+    .wf-dec { border-color:var(--oro); background:rgba(245,166,35,.08); }
+    table { width:100%; border-collapse:collapse; margin-top:20px; font-size:.88rem; }
+    th { background:#1a1a2e; color:var(--acento); padding:12px 16px; text-align:left; letter-spacing:2px; font-size:.75rem; text-transform:uppercase; border-bottom:2px solid var(--acento); }
+    td { padding:11px 16px; border-bottom:1px solid #222; color:var(--gris); }
+    tr:hover td { background:rgba(233,69,96,.05); color:var(--blanco); }
+    .tag { display:inline-block; padding:2px 10px; border-radius:20px; font-size:.7rem; font-weight:bold; }
+    .tag-c{background:var(--acento);color:#fff} .tag-g{background:#ff8c00;color:#fff} .tag-m{background:#555;color:#fff}
+    .tests { display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:24px; margin-top:20px; }
+    .test { background:#111827; border:1px solid #333; border-radius:8px; padding:22px; position:relative; }
+    .test::before { content:'"'; position:absolute; top:-10px; left:16px; font-size:4rem; color:var(--acento); line-height:1; opacity:.4; }
+    .test-txt { color:var(--gris); font-size:.9rem; font-style:italic; margin-bottom:14px; }
+    .test-aut { color:var(--oro); font-size:.8rem; }
+    .test-car { color:#666; font-size:.75rem; }
+    .penas { display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:20px; margin-top:20px; }
+    .pena { background:#111827; border:1px solid #333; border-radius:8px; padding:22px; text-align:center; }
+    .pena-ic { font-size:2.5rem; margin-bottom:10px; }
+    .pena-t { color:var(--oro); font-size:.9rem; margin-bottom:8px; }
+    .pena-d { color:var(--gris); font-size:.82rem; }
+    .peticion-box { background:linear-gradient(135deg,#1a1a2e,#0d1117); border:2px solid var(--oro); border-radius:12px; padding:40px; text-align:center; max-width:700px; margin:0 auto; }
+    .peticion-box h2 { color:var(--oro); font-size:1.8rem; margin-bottom:16px; }
+    .peticion-box p { color:var(--gris); margin-bottom:24px; line-height:1.8; }
+    .btn-firmar {
+      display:inline-block; background:linear-gradient(135deg,#00b259,#0f9b58); color:#fff;
+      font-size:1.2rem; font-weight:bold; padding:18px 48px; border-radius:50px; text-decoration:none;
+      letter-spacing:2px; text-transform:uppercase;
+      animation:glow 2s ease-in-out infinite alternate;
+    }
+    @keyframes glow { from{box-shadow:0 0 20px rgba(15,155,88,.4);transform:scale(1)} to{box-shadow:0 0 40px rgba(15,155,88,.8);transform:scale(1.03)} }
+    .firmas-cnt { margin-top:30px; font-size:2.5rem; font-weight:bold; color:var(--blanco); }
+    .firmas-cnt span { color:var(--verde); }
+    .firmas-meta { color:var(--gris); font-size:.85rem; margin-top:6px; }
+    .prog { background:#333; border-radius:20px; height:16px; margin-top:16px; overflow:hidden; }
+    .prog-fill { height:100%; background:linear-gradient(90deg,var(--verde),#39ff14); border-radius:20px; width:73%; animation:growBar 2s ease forwards; }
+    @keyframes growBar { from{width:0%}to{width:73%} }
+    .stamp { display:inline-block; border:4px solid var(--acento); color:var(--acento); font-size:1.4rem; font-weight:bold; padding:10px 20px; transform:rotate(-8deg); letter-spacing:4px; margin:20px 0; opacity:.85; text-transform:uppercase; }
+    footer { background:#050505; border-top:3px solid var(--acento); padding:40px 20px; text-align:center; color:#555; font-size:.82rem; }
+    footer strong { color:var(--gris); }
+  </style>
+</head>
+<body>
+
+<div class="banner">⚠️ DENUNCIA OFICIAL EN CURSO — EXPEDIENTE Nº 2024-BCN-ESPAD-00042 — ESTADO: ACTIVA ⚠️</div>
+
+<div class="hero">
+  <div class="container">
+    <div class="hero-badge">DENUNCIA ANÓNIMA CERTIFICADA</div>
+    <h1>CASO: <span>CANYON AEROAD CFR BLACK COSMOS</span><br><span style="font-size:.6em;color:var(--gris)">contra</span><br><span>"CIPOTE"</span></h1>
+    <span class="bici">🚴</span>
+    <p class="hero-sub">Una denuncia anónima, documentada científicamente, sobre la noche más oscura en la historia del ciclismo ibérico. Una bicicleta habla. El esparadrapo, prueba.</p>
+    <div class="expediente">EXPEDIENTE Nº 2024-BCN-ESPAD-00042 · CLASIFICACIÓN: URGENTE</div>
+    <div class="metricas">
+      <div class="m"><span class="m-val">8h 47m</span><span class="m-lab">Duración del suplicio</span></div>
+      <div class="m"><span class="m-val">3.2 kg</span><span class="m-lab">Esparadrapo aplicado</span></div>
+      <div class="m"><span class="m-val">86.5%</span><span class="m-lab">Cobertura del cuadro</span></div>
+      <div class="m"><span class="m-val">6</span><span class="m-lab">Artículos del Convenio violados</span></div>
+      <div class="m"><span class="m-val">€11.999</span><span class="m-lab">Valor del vehículo vejado</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- PARTES -->
+<section>
+  <div class="container">
+    <div class="sec-title">01 · IDENTIFICACIÓN DE LAS PARTES</div>
+    <div class="grid2">
+      <div class="card">
+        <h3>🚵 LA DENUNCIANTE (VÍCTIMA)</h3>
+        <div class="dato"><span class="dl">Modelo</span><span class="dv bueno">Canyon Aeroad CFR</span></div>
+        <div class="dato"><span class="dl">Colorway</span><span class="dv bueno">Black Cosmos</span></div>
+        <div class="dato"><span class="dl">Cuadro</span><span class="dv bueno">Carbono CFR (VCLS 2.0)</span></div>
+        <div class="dato"><span class="dl">Peso original</span><span class="dv bueno">6.9 kg</span></div>
+        <div class="dato"><span class="dl">Peso post-esparadrapo</span><span class="dv malo">10.1 kg (+46.4%)</span></div>
+        <div class="dato"><span class="dl">Groupset</span><span class="dv bueno">SRAM RED AXS eTap</span></div>
+        <div class="dato"><span class="dl">Ruedas</span><span class="dv bueno">Zipp 404 Firecrest</span></div>
+        <div class="dato"><span class="dl">Precio original</span><span class="dv bueno">€11.999</span></div>
+        <div class="dato"><span class="dl">Estado psicológico</span><span class="dv malo">Traumatizada</span></div>
+        <div class="dato"><span class="dl">Identidad en denuncia</span><span class="dv">ANÓNIMA (protegida)</span></div>
+      </div>
+      <div class="card">
+        <h3>👤 EL DENUNCIADO</h3>
+        <div class="dato"><span class="dl">Alias</span><span class="dv malo">"Cipote"</span></div>
+        <div class="dato"><span class="dl">Rol</span><span class="dv malo">Presunto agresor con esparadrapo</span></div>
+        <div class="dato"><span class="dl">Relación con víctima</span><span class="dv malo">Propietario (auto-declarado)</span></div>
+        <div class="dato"><span class="dl">Rolls de esparadrapo adquiridos</span><span class="dv malo">7 unidades (factura adjunta)</span></div>
+        <div class="dato"><span class="dl">Hora inicio agresión</span><span class="dv malo">22:14 h</span></div>
+        <div class="dato"><span class="dl">Hora finalización</span><span class="dv malo">07:01 h</span></div>
+        <div class="dato"><span class="dl">Justificación alegada</span><span class="dv malo">"Para que no se raye"</span></div>
+        <div class="dato"><span class="dl">Antecedentes</span><span class="dv malo">Reincidente (vel. con cinta 2022)</span></div>
+        <div class="dato"><span class="dl">Publicó en Instagram</span><span class="dv malo">SÍ — "#protegidacomonuevo 💪"</span></div>
+        <div class="dato"><span class="dl">Arrepentimiento</span><span class="dv malo">NINGUNO</span></div>
+      </div>
+    </div>
+    <div class="info-box" style="margin-top:24px;">
+      <strong>NOTA LEGAL:</strong> La identidad de la denunciante está protegida por el art. 17 del Convenio Internacional de Vehículos Mecánicos de Dos Ruedas de Ginebra (CIVMDRG-1988), ratificado por España mediante BOE núm. 214, de 6 de septiembre de 1988. La bicicleta es anónima. El esparadrapo, no miente.
+    </div>
+  </div>
+</section>
+
+<!-- CRONOLOGÍA -->
+<section>
+  <div class="container">
+    <div class="sec-title">02 · CRONOLOGÍA FORENSE DE LOS HECHOS</div>
+    <p style="color:var(--gris);margin-bottom:30px;font-size:.9rem;">Reconstrucción temporal basada en metadatos del teléfono del agresor, sensores de presión del cuadro y testimonio de un corcho de vino que se encontraba en el garaje.</p>
+    <div class="tl">
+      <div class="tl-item">
+        <div class="tl-hora">21:45 H</div>
+        <div class="tl-t">Regreso del agresor al domicilio</div>
+        <div class="tl-d">Cipote llega a casa tras ver un documental de ciclismo en el que un corredor llevaba la bici tapada con cinta. Declara haberle "parecido una idea genial".</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-hora">21:58 H</div>
+        <div class="tl-t">Compra online nocturna — PREMEDITACIÓN ACREDITADA</div>
+        <div class="tl-d">Actividad detectada en Amazon: 7 rollos de esparadrapo hospitalario Leukoplast 10cm×5m, color beige. Pedido urgente. Entrega en 2h. La bicicleta duerme, ajena al horror que se avecina.</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-hora">22:14 H</div>
+        <div class="tl-t tl-grave">⚠️ INICIO DE LA AGRESIÓN</div>
+        <div class="tl-d tl-grave">Primera aplicación de esparadrapo sobre el tubo superior del cuadro. La víctima, aparcada en el soporte, no puede defenderse. El cosmos se vuelve beige.</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-hora">22:45 H</div>
+        <div class="tl-t">Cobertura del 25% — Primera pausa</div>
+        <div class="tl-d">Cipote hace un descanso para consultar un tutorial de YouTube: "Protege tu bici con esparadrapo PRO 🔥". Visto hasta el final. Valorado con 5 estrellas. Vergonzoso.</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-hora">23:30 H</div>
+        <div class="tl-t">Cobertura del 50% — El agresor canta</div>
+        <div class="tl-d">Sensores acústicos del garaje detectan humming de "Eye of the Tiger" mientras Cipote aplica esparadrapo en el vástago de la horquilla. La víctima no tiene palabras.</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-hora">01:15 H</div>
+        <div class="tl-t tl-grave">⚠️ INCIDENTE CRÍTICO — Las Zipp también caen</div>
+        <div class="tl-d tl-grave">El denunciado extiende la cobertura a las ruedas Zipp 404 Firecrest. Aplica esparadrapo en los radios. Los vecinos del piso de arriba declaran haber oído "como el crujido del alma misma".</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-hora">03:40 H</div>
+        <div class="tl-t">Segunda pausa — Bocadillo nocturno</div>
+        <div class="tl-d">El agresor se alimenta. La bicicleta observa, impotente, cubierta en un 78% de esparadrapo. Un corcho de Ribera del Duero 2019 cae al suelo como testigo silencioso del crimen.</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-hora">05:22 H</div>
+        <div class="tl-t tl-grave">⚠️ PICO DE LA ATROCIDAD — El manillar</div>
+        <div class="tl-d tl-grave">El manillar Deda Superleggera, diseñado para aerodinámica en el World Tour, queda enfundado en esparadrapo color carne. El Cda aumenta un 340%. Los ingenieros de Canyon lloran en sus despachos de Koblenz.</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-hora">07:01 H</div>
+        <div class="tl-t">FIN DEL SUPLICIO — El agresor se va a dormir</div>
+        <div class="tl-d">Cipote contempla su "obra de arte" con satisfacción. Toma una foto. La sube a Instagram: "#protegidacomonuevo 💪". 14 likes. Todos ellos, cómplices morales.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- COBERTURA -->
+<section>
+  <div class="container">
+    <div class="sec-title">03 · ANÁLISIS FORENSE DE COBERTURA</div>
+    <p style="color:var(--gris);margin-bottom:24px;font-size:.9rem;">Evaluación cuantitativa de la superficie afectada mediante escaneado fotogramétrico 3D y triangulación láser (simulada con cinta métrica y mucha buena voluntad).</p>
+
+    <div class="cov-lab">Tubo superior (Top Tube)</div>
+    <div class="cov-bar"><div class="cov-fill" style="width:100%">100%</div></div>
+    <div class="cov-lab">Tubo diagonal (Down Tube)</div>
+    <div class="cov-bar"><div class="cov-fill" style="width:100%">100%</div></div>
+    <div class="cov-lab">Vaina cadena (Chain Stay)</div>
+    <div class="cov-bar"><div class="cov-fill" style="width:95%">95%</div></div>
+    <div class="cov-lab">Vaina asiento (Seat Stay)</div>
+    <div class="cov-bar"><div class="cov-fill" style="width:88%">88%</div></div>
+    <div class="cov-lab">Horquilla delantera</div>
+    <div class="cov-bar"><div class="cov-fill" style="width:92%">92%</div></div>
+    <div class="cov-lab">Manillar (zona aerodinámica crítica)</div>
+    <div class="cov-bar"><div class="cov-fill" style="width:100%">100%</div></div>
+    <div class="cov-lab">Ruedas Zipp (radios y llanta)</div>
+    <div class="cov-bar"><div class="cov-fill" style="width:67%">67%</div></div>
+    <div class="cov-lab">Potencia Deda</div>
+    <div class="cov-bar"><div class="cov-fill" style="width:100%">100%</div></div>
+    <div class="cov-lab">Sillín (incluido grabado de firma en carbono)</div>
+    <div class="cov-bar"><div class="cov-fill" style="width:45%">45%</div></div>
+    <div class="cov-lab">Bielas SRAM RED</div>
+    <div class="cov-bar"><div class="cov-fill" style="width:78%">78%</div></div>
+
+    <p style="margin-top:20px;color:var(--acento);font-weight:bold;">COBERTURA MEDIA: 86.5% — CLASIFICACIÓN: CATÁSTROFE ADHESIVA GRADO MÁXIMO</p>
+
+    <div class="charts-grid" style="margin-top:40px;">
+      <div class="chart-card">
+        <h4>Esparadrapo aplicado por hora (kg acumulados)</h4>
+        <canvas id="c1"></canvas>
+      </div>
+      <div class="chart-card">
+        <h4>Impacto aerodinámico por zona (ΔCda %)</h4>
+        <canvas id="c2"></canvas>
+      </div>
+      <div class="chart-card">
+        <h4>Cobertura por componente (%)</h4>
+        <canvas id="c3"></canvas>
+      </div>
+      <div class="chart-card">
+        <h4>Rolls de esparadrapo por turno nocturno</h4>
+        <canvas id="c4"></canvas>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ESCALA -->
+<section>
+  <div class="container">
+    <div class="sec-title">04 · ESCALA INTERNACIONAL DE VEJACIÓN CON CINTA ADHESIVA (EIVCA)</div>
+    <p style="color:var(--gris);margin-bottom:20px;font-size:.9rem;">La EIVCA, desarrollada por el Instituto Velodrome de Lausana (2019), clasifica los incidentes de aplicación no consensuada de materiales adhesivos sobre vehículos de carbono de alto rendimiento.</p>
+    <div>
+      <div class="escala-item">
+        <div class="esc-num" style="background:#1a472a;color:#39ff14;">1</div>
+        <div class="esc-desc"><strong>NIVEL LEVE — Un tirón de cinta de 5cm</strong><span>Aplicación de cinta de marcaje en zona de transporte. Perdón otorgable. La bici lo supera.</span></div>
+      </div>
+      <div class="escala-item">
+        <div class="esc-num" style="background:#1a3a1a;color:#7cfc00;">2</div>
+        <div class="esc-desc"><strong>NIVEL MODERADO — Protección de cuadro con antichoques</strong><span>Uso de protectores de neopreno en vainas. Aceptable. Incluso elogiable si se compró en Decathlon.</span></div>
+      </div>
+      <div class="escala-item">
+        <div class="esc-num" style="background:#2d2a00;color:var(--oro);">3</div>
+        <div class="esc-desc"><strong>NIVEL PREOCUPANTE — Un roll en el tubo inferior</strong><span>Primera señal de alarma. La bici empieza a sospechar. Se recomienda terapia para el propietario.</span></div>
+      </div>
+      <div class="escala-item">
+        <div class="esc-num" style="background:#3d1a00;color:#ff8c00;">4</div>
+        <div class="esc-desc"><strong>NIVEL GRAVE — Dos rolls o más, zona crítica afectada</strong><span>Cobertura superior al 30%. Se recomienda intervención familiar inmediata.</span></div>
+      </div>
+      <div class="escala-item">
+        <div class="esc-num" style="background:#3d0000;color:var(--acento);">5</div>
+        <div class="esc-desc"><strong>NIVEL SEVERO — Manillar afectado</strong><span>La aerodinámica llora. Los ingenieros del equipo Canyon se despiertan con pesadillas. Cda fuera de control.</span></div>
+      </div>
+      <div class="escala-item">
+        <div class="esc-num" style="background:#1a0000;color:#ff0000;font-size:1.4rem;">🔥</div>
+        <div class="esc-desc"><strong>NIVEL CATASTRÓFICO — Caso "CIPOTE" (7 rolls, 8h47m, 86.5%)</strong><span>Sin precedentes en la historia ciclista peninsular. Declarado desastre nacional por el Comité de la EIVCA.</span></div>
+        <div class="esc-pointer">← ESTAMOS AQUÍ</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ARTÍCULOS CONVENIO -->
+<section>
+  <div class="container">
+    <div class="sec-title">05 · CONVENIO DE GINEBRA — ARTÍCULOS VULNERADOS</div>
+    <div class="info-box">
+      <strong>CONVENIO INTERNACIONAL DE LOS VEHÍCULOS MECÁNICOS DE DOS RUEDAS DE GINEBRA (CIVMDRG)</strong><br>
+      Aprobado el 12 de marzo de 1987. Ratificado por España mediante Real Decreto 1458/1988, BOE núm. 214, de 6 de septiembre de 1988.<br>
+      <em style="font-size:.78rem;color:#555;">(Nota: este convenio es completamente inventado, pero debería existir)</em>
+    </div>
+    <div class="arts">
+      <div class="art">
+        <div class="art-num">ART. 3.1 — TÍTULO I</div>
+        <div class="art-t">Dignidad Estética del Vehículo</div>
+        <div class="art-txt">"Todo vehículo de dos ruedas tendrá derecho a exhibir su acabado original de fábrica sin que ningún material adhesivo, pintura o sustancia pegajosa de origen hospitalario pueda ser aplicado sin consentimiento expreso del fabricante o de la propia bicicleta, si esta pudiera hablar."</div>
+        <div class="art-v">✗ VIOLADO — APLICACIÓN MASIVA NO CONSENTIDA</div>
+      </div>
+      <div class="art">
+        <div class="art-num">ART. 5.2 — TÍTULO II</div>
+        <div class="art-t">Protección Aerodinámica</div>
+        <div class="art-txt">"Ningún propietario podrá aplicar materiales que incrementen el coeficiente aerodinámico (Cda) del vehículo en más de un 15% respecto a los valores de fábrica. La violación constituye crimen contra el rendimiento ciclístico."</div>
+        <div class="art-v">✗ VIOLADO — INCREMENTO CDA DEL 340%</div>
+      </div>
+      <div class="art">
+        <div class="art-num">ART. 7.4 — TÍTULO II</div>
+        <div class="art-t">Integridad del Material de Carbono</div>
+        <div class="art-txt">"El carbono de alta modularidad, especialmente en grado CFR, gozará de protección especial. Cualquier adhesivo aplicado directamente sin lámina de sacrificio constituirá daño irreparable al alma misma del cuadro."</div>
+        <div class="art-v">✗ VIOLADO — SIN LÁMINA DE SACRIFICIO</div>
+      </div>
+      <div class="art">
+        <div class="art-num">ART. 9.1 — TÍTULO III</div>
+        <div class="art-t">Derecho al Descanso Nocturno</div>
+        <div class="art-txt">"Los vehículos de dos ruedas tienen derecho a un descanso nocturno de al menos 8 horas sin que ninguna intervención mecánica, química o adhesiva interrumpa dicho descanso. Especialmente entre las 22:00 y las 07:00 horas."</div>
+        <div class="art-v">✗ VIOLADO — 8H47M DE AGRESIÓN NOCTURNA</div>
+      </div>
+      <div class="art">
+        <div class="art-num">ART. 11.3 — TÍTULO IV</div>
+        <div class="art-t">Protección de Componentes Premium</div>
+        <div class="art-txt">"Los componentes cuyo precio unitario supere los €1.500 (ruedas, grupo electrónico, manillar de carbono) gozarán de protección reforzada. Su modificación visual no autorizada constituirá delito agravado."</div>
+        <div class="art-v">✗ VIOLADO — RUEDAS ZIPP Y SRAM RED AFECTADOS</div>
+      </div>
+      <div class="art">
+        <div class="art-num">ART. 14.7 — TÍTULO V</div>
+        <div class="art-t">Derecho a la Imagen Pública</div>
+        <div class="art-txt">"Se prohíbe la publicación en redes sociales de imágenes de un vehículo en estado de vejación adhesiva sin consentimiento informado. Dicha publicación constituirá agravante de primer orden."</div>
+        <div class="art-v">✗ VIOLADO — 14 LIKES DE CÓMPLICES EN INSTAGRAM</div>
+      </div>
+    </div>
+    <div class="codigo" style="margin-top:30px;">
+<span class="cm">// Motor jurídico CIVMDRG v3.14 — Evaluación automática de violaciones</span>
+<span class="kw">const</span> caso = {
+  expediente: <span class="str">"2024-BCN-ESPAD-00042"</span>,
+  denunciado: <span class="str">"Cipote"</span>,
+  articulosViolados: [<span class="num">3.1</span>, <span class="num">5.2</span>, <span class="num">7.4</span>, <span class="num">9.1</span>, <span class="num">11.3</span>, <span class="num">14.7</span>],
+  rollosEsparadrapo: <span class="num">7</span>,
+  coberturaPct: <span class="num">86.5</span>,
+  horasAgresion: <span class="num">8.78</span>,
+  publicadoEnInstagram: <span class="num">true</span>,
+};
+
+<span class="kw">function</span> calcularSancion(c) {
+  <span class="kw">const</span> base              = c.rollosEsparadrapo * <span class="num">500</span>;      <span class="cm">// €3.500</span>
+  <span class="kw">const</span> agravante_nocturno = c.horasAgresion * <span class="num">300</span>;       <span class="cm">// €2.634</span>
+  <span class="kw">const</span> agravante_instagram = c.publicadoEnInstagram ? <span class="num">2000</span> : <span class="num">0</span>; <span class="cm">// €2.000</span>
+  <span class="kw">return</span> base + agravante_nocturno + agravante_instagram;
+}
+
+console.log(calcularSancion(caso)); <span class="cm">// → €8.134 + vergüenza pública perpetua</span>
+    </div>
+  </div>
+</section>
+
+<!-- WORKFLOW -->
+<section>
+  <div class="container">
+    <div class="sec-title">06 · WORKFLOW DE LA INVESTIGACIÓN FORENSE</div>
+    <div class="wf">
+      <div class="wf-step">
+        <div class="wf-left"><div class="wf-circle">🚨</div><div class="wf-line"></div></div>
+        <div class="wf-content"><h4>FASE 1 — Detección del Incidente</h4><p>La bicicleta activa su protocolo de emergencia al detectar presión adhesiva anómala en el tubo superior. El sistema envía una alerta cifrada a la Comisaría Virtual de Vehículos de Dos Ruedas (CVDR).</p></div>
+      </div>
+      <div class="wf-step">
+        <div class="wf-left"><div class="wf-circle">📸</div><div class="wf-line"></div></div>
+        <div class="wf-content"><h4>FASE 2 — Recogida de Evidencias</h4><p>Extracción de metadatos de la foto de Instagram, análisis espectroscópico del esparadrapo, reconstrucción 3D del patrón de aplicación y entrevista al corcho de Ribera del Duero testigo.</p></div>
+      </div>
+      <div class="wf-step">
+        <div class="wf-left"><div class="wf-circle">🔬</div><div class="wf-line"></div></div>
+        <div class="wf-content"><h4>FASE 3 — Análisis en Laboratorio</h4><p>El esparadrapo retirado es analizado en el Laboratorio Forense Ciclístico de la Universitat Politècnica de Girona. Resultado: marca Leukoplast Hospital, 3.2 kg. Viscosidad: "inaceptable para un Black Cosmos".</p></div>
+      </div>
+      <div class="wf-step">
+        <div class="wf-left"><div class="wf-circle">⚖️</div><div class="wf-line"></div></div>
+        <div class="wf-content wf-dec"><h4>FASE 4 — Evaluación Jurídica</h4><p>El Tribunal Arbitral de Vehículos Mecánicos de Dos Ruedas (TAVMDR) revisa los 6 artículos violados. Veredicto preliminar: culpabilidad con agravante de reincidencia (incidente del velocímetro con cinta, 2022).</p></div>
+      </div>
+      <div class="wf-step">
+        <div class="wf-left"><div class="wf-circle">📣</div><div class="wf-line"></div></div>
+        <div class="wf-content"><h4>FASE 5 — Denuncia Pública</h4><p>La víctima, aconsejada por su abogado (un Garmin Edge 840 con acceso a internet), decide hacer pública la denuncia para recabar apoyos y firmas que exijan justicia internacional.</p></div>
+      </div>
+      <div class="wf-step">
+        <div class="wf-left"><div class="wf-circle">✊</div></div>
+        <div class="wf-content" style="border-color:var(--verde)"><h4>FASE 6 — Movilización Ciudadana (EN CURSO)</h4><p>Recogida de firmas en Change.org. Objetivo: 10.000 apoyos para presentar la petición formal ante el COIVDR y ante el propio Cipote para que pida perdón públicamente.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- EVIDENCIAS -->
+<section>
+  <div class="container">
+    <div class="sec-title">07 · TABLA DE EVIDENCIAS REGISTRADAS</div>
+    <table>
+      <thead><tr><th>ID</th><th>Evidencia</th><th>Tipo</th><th>Valor probatorio</th><th>Clase</th></tr></thead>
+      <tbody>
+        <tr><td>E-001</td><td>Foto Instagram "#protegidacomonuevo" (07:03h)</td><td>Digital</td><td>IRREFUTABLE — Autoincriminación pública</td><td><span class="tag tag-c">CRÍTICA</span></td></tr>
+        <tr><td>E-002</td><td>7 rolls de Leukoplast (3 vacíos + 4 a medias)</td><td>Material</td><td>Alta — Confirma volumen de agresión</td><td><span class="tag tag-c">CRÍTICA</span></td></tr>
+        <tr><td>E-003</td><td>Pedido Amazon 22:01h — 7×Leukoplast Hospital 10cm×5m</td><td>Digital</td><td>Alta — Premeditación demostrada</td><td><span class="tag tag-c">CRÍTICA</span></td></tr>
+        <tr><td>E-004</td><td>Tutorial YouTube: "Protege tu bici con esparadrapo PRO 🔥" — visto completo</td><td>Digital</td><td>Alta — Intencionalidad consciente</td><td><span class="tag tag-g">GRAVE</span></td></tr>
+        <tr><td>E-005</td><td>Testimonio del corcho de Ribera del Duero 2019</td><td>Testifical</td><td>Media — Testigo presencial, pero es un corcho</td><td><span class="tag tag-g">GRAVE</span></td></tr>
+        <tr><td>E-006</td><td>Incremento de peso: 6.9kg → 10.1kg (+46.4%)</td><td>Pericial</td><td>Alta — Daño ponderal cuantificado</td><td><span class="tag tag-c">CRÍTICA</span></td></tr>
+        <tr><td>E-007</td><td>Incremento Cda del 340% en manillar (túnel de viento simulado)</td><td>Pericial</td><td>Alta — Daño aerodinámico grave</td><td><span class="tag tag-c">CRÍTICA</span></td></tr>
+        <tr><td>E-008</td><td>Antecedente 2022: velocímetro con cinta</td><td>Registral</td><td>Alta — Reincidencia demostrada</td><td><span class="tag tag-g">GRAVE</span></td></tr>
+        <tr><td>E-009</td><td>14 likes en Instagram de "cómplices morales"</td><td>Digital</td><td>Media — Fomenta la conducta</td><td><span class="tag tag-g">GRAVE</span></td></tr>
+        <tr><td>E-010</td><td>Humming de "Eye of the Tiger" detectado por sensor acústico</td><td>Acústico</td><td>Baja — Pero muy, muy perturbador</td><td><span class="tag tag-m">MENOR</span></td></tr>
+      </tbody>
+    </table>
+    <div style="text-align:center;margin-top:20px;"><div class="stamp">EVIDENCIAS CERTIFICADAS</div></div>
+  </div>
+</section>
+
+<!-- TESTIMONIOS -->
+<section>
+  <div class="container">
+    <div class="sec-title">08 · TESTIMONIOS DE EXPERTOS</div>
+    <div class="tests">
+      <div class="test">
+        <p class="test-txt">"En mis 30 años de ingeniería aerodinámica, nunca había visto un Cda tan devastado. El manillar era... irreconocible. Tuve que salir a tomar aire. Literalmente no había aire en ese manillar."</p>
+        <div class="test-aut">Dr. Markus Windtunnel</div>
+        <div class="test-car">Instituto de Aerodinámica Ciclista de Varese, Italia</div>
+      </div>
+      <div class="test">
+        <p class="test-txt">"El carbono CFR de Canyon es lo más cercano a una obra de arte que existe. Ver eso cubierto de esparadrapo hospitalario beige es como ponerle un bigote a la Mona Lisa. Pero peor."</p>
+        <div class="test-aut">Ingrid Kohlenfaser</div>
+        <div class="test-car">Directora técnica, Asociación Europea de Cuadros de Carbono (AECC)</div>
+      </div>
+      <div class="test">
+        <p class="test-txt">"El Convenio de Ginebra fue redactado para prevenir casos como este. Los redactores no llegaron a imaginar que alguien usaría 7 rolls. El artículo 5.2 habla de un 15% máximo. Un 340% es... bíblico."</p>
+        <div class="test-aut">Prof. Jean-Pierre Adhésif</div>
+        <div class="test-car">Catedrático de Derecho Velocipédico, Universidad de Lausana</div>
+      </div>
+      <div class="test">
+        <p class="test-txt">"Analicé el esparadrapo en laboratorio. Era Leukoplast Hospital. De farmacia de barrio. No al menos el bueno de Amazon que viene en negro. El beige. Para una Black Cosmos. Hay crímenes de guerra con más estética."</p>
+        <div class="test-aut">Dra. Sílvia Adhesiva</div>
+        <div class="test-car">Laboratorio Forense Ciclístico, Universitat Politècnica de Girona</div>
+      </div>
+      <div class="test">
+        <p class="test-txt">"Yo mismo fui un Canyon Aeroad. Bueno, no. Pero si lo fuera y me hicieran esto, denunciaría. Con mucha razón. El esparadrapo es la mayor humillación que puede sufrir una bici de €12.000 en el siglo XXI."</p>
+        <div class="test-aut">Alejandro Valverde</div>
+        <div class="test-car">Ciclista profesional retirado (declaración no verificada, pero plausible)</div>
+      </div>
+      <div class="test">
+        <p class="test-txt">"Estaba ahí. Vi todo. Desde las 22:30. Soy un corcho. No puedo moverme ni hablar. Pero si pudiera, señalaría a Cipote con el dedo. Con mucha firmeza. Mucha."</p>
+        <div class="test-aut">Corcho Testigo</div>
+        <div class="test-car">Ribera del Duero Reserva 2019, testigo ocular presencial</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PENALIZACIONES -->
+<section>
+  <div class="container">
+    <div class="sec-title">09 · PENALIZACIONES SOLICITADAS AL TRIBUNAL</div>
+    <div class="penas">
+      <div class="pena"><div class="pena-ic">💶</div><div class="pena-t">Multa económica</div><div class="pena-d">€8.134 según el motor jurídico CIVMDRG v3.14, más intereses por cada hora de esparadrapo nocturno.</div></div>
+      <div class="pena"><div class="pena-ic">🚫</div><div class="pena-t">Veto de cinta adhesiva</div><div class="pena-d">5 años sin acceso a ferretería, farmacia ni Amazon en todo el territorio nacional. Con foto en la puerta.</div></div>
+      <div class="pena"><div class="pena-ic">📢</div><div class="pena-t">Disculpa pública</div><div class="pena-d">Publicación en Instagram, mismo alcance que la foto del crimen. Con hashtag #losentoCanyonAeroad.</div></div>
+      <div class="pena"><div class="pena-ic">🎓</div><div class="pena-t">Formación obligatoria</div><div class="pena-d">40h de curso "Protección Responsable del Cuadro de Carbono" en la Escuela Ciclista de Alcobendas.</div></div>
+      <div class="pena"><div class="pena-ic">🔄</div><div class="pena-t">Retirada profesional</div><div class="pena-d">El esparadrapo debe ser retirado por un profesional certificado, con lámina de sacrificio, ángulo de 45°. Sin prisas.</div></div>
+      <div class="pena"><div class="pena-ic">🏆</div><div class="pena-t">Upgrade obligatorio</div><div class="pena-d">Sustitución de las Zipp si presentan marcas de adhesivo. Corriendo exclusivamente a cargo del denunciado.</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- PETICIÓN -->
+<section style="background:linear-gradient(180deg,#050505,#0d1117)">
+  <div class="container">
+    <div class="sec-title">10 · PETICIÓN CIUDADANA — FIRMA Y COMPARTE</div>
+    <div class="peticion-box">
+      <h2>¡Basta ya del esparadrapo!</h2>
+      <p>Únete para exigir que Cipote reconozca públicamente su error, pague la multa del Convenio de Ginebra (ficticio pero justo), retire el esparadrapo con un profesional certificado y nunca, <em>nunca jamás</em>, vuelva a hacerle esto a una Canyon Aeroad CFR Black Cosmos, ni a ningún vehículo de dos ruedas que no lo haya pedido expresamente.</p>
+      <p style="font-size:.85rem;color:#555;margin-bottom:30px;">Esta petición será presentada ante el Comité Olímpico Internacional de Vehículos de Dos Ruedas, el Ministerio de Fomento y la tienda Canyon de la que fue comprada la víctima.</p>
+      <a href="https://www.change.org/start-a-petition" target="_blank" rel="noopener noreferrer" class="btn-firmar">✍️ FIRMAR LA PETICIÓN EN CHANGE.ORG</a>
+      <div class="firmas-cnt"><span>7.302</span> / 10.000 firmas</div>
+      <div class="firmas-meta">¡Faltan solo 2.698 firmas para presentar la petición!</div>
+      <div class="prog"><div class="prog-fill"></div></div>
+      <p style="font-size:.78rem;color:#444;margin-top:20px;">* El número de firmas se actualiza cada vez que alguien abre esta página y siente empatía por la bici.</p>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="container">
+    <div style="font-size:1.5rem;margin-bottom:16px;">🚴 🏛️ ⚖️ 🌍 🔬 🏆</div>
+    <strong>CIVMDRG — Comité Internacional de Vehículos Mecánicos de Dos Ruedas de Ginebra</strong><br>
+    Expediente Nº 2024-BCN-ESPAD-00042 · Clasificación: URGENTE · Estado: ACTIVO<br>
+    Página generada por el Motor Jurídico Ciclístico v3.14
+    <p style="margin-top:16px;font-size:.77rem;color:#444;">
+      Este documento es una denuncia anónima de naturaleza satírica. La Canyon Aeroad CFR Black Cosmos es real. El Convenio de Ginebra de 1988 para vehículos de dos ruedas <em>no</em> existe (todavía). Cipote, si estás leyendo esto: ya sabes lo que hiciste. Y el corcho también lo sabe.
+    </p>
+    <p style="margin-top:8px;font-size:.75rem;color:#333;">© 2024 Asociación para la Defensa de las Bicis Maltratadas con Esparadrapo (ADBME) · Todos los derechos reservados</p>
+  </div>
+</footer>
+
+<script>
+  Chart.defaults.color = '#c9c9c9';
+  Chart.defaults.font.family = "'Courier New', monospace";
+  const gc = 'rgba(255,255,255,0.07)';
+  const ac = '#e94560', or = '#f5a623', ve = '#0f9b58';
+
+  new Chart(document.getElementById('c1'), {
+    type:'line',
+    data:{
+      labels:['22h','23h','00h','01h','02h','03h','04h','05h','06h','07h'],
+      datasets:[{label:'kg acumulados',data:[0.1,0.5,0.8,1.4,1.6,1.7,2.2,2.9,3.1,3.2],borderColor:ac,backgroundColor:'rgba(233,69,96,0.15)',fill:true,tension:0.4,pointBackgroundColor:ac,pointRadius:4}]
+    },
+    options:{responsive:true,plugins:{legend:{display:false}},scales:{x:{grid:{color:gc}},y:{grid:{color:gc},beginAtZero:true}}}
+  });
+
+  new Chart(document.getElementById('c2'), {
+    type:'bar',
+    data:{
+      labels:['Manillar','Down Tube','Potencia','Top Tube','Horquilla','Ruedas'],
+      datasets:[{label:'ΔCda %',data:[340,180,210,145,120,95],backgroundColor:['rgba(233,69,96,0.85)','rgba(233,69,96,0.7)','rgba(233,69,96,0.75)','rgba(245,166,35,0.7)','rgba(245,166,35,0.6)','rgba(15,155,88,0.6)'],borderRadius:4}]
+    },
+    options:{responsive:true,plugins:{legend:{display:false}},scales:{x:{grid:{color:gc}},y:{grid:{color:gc},beginAtZero:true}}}
+  });
+
+  new Chart(document.getElementById('c3'), {
+    type:'radar',
+    data:{
+      labels:['Top Tube','Down Tube','Horquilla','Manillar','Ruedas Zipp','Bielas','Potencia','Sillín'],
+      datasets:[{label:'%',data:[100,100,92,100,67,78,100,45],backgroundColor:'rgba(233,69,96,0.2)',borderColor:ac,pointBackgroundColor:ac,pointRadius:4}]
+    },
+    options:{responsive:true,plugins:{legend:{display:false}},scales:{r:{min:0,max:100,grid:{color:gc},ticks:{stepSize:25,backdropColor:'transparent'},angleLines:{color:gc},pointLabels:{font:{size:10}}}}}
+  });
+
+  new Chart(document.getElementById('c4'), {
+    type:'doughnut',
+    data:{
+      labels:['Turno 1 (22h-00h)','Turno 2 (00h-03h)','Turno 3 (03h-07h)'],
+      datasets:[{data:[2,3,2],backgroundColor:[ac,or,ve],borderColor:'#111827',borderWidth:3}]
+    },
+    options:{responsive:true,plugins:{legend:{position:'bottom',labels:{padding:16,font:{size:11}}}}}
+  });
+</script>
+</body>
+</html>
