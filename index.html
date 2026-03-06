@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FIT File Comparison Tool</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-zoom@2.2.0/dist/chartjs-plugin-zoom.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/hammerjs@2.0.8/hammer.min.js"></script>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <h1>FIT File Comparison Tool</h1>
+        <p class="subtitle">Upload two FIT files to compare activity data side by side</p>
+    </header>
+
+    <main>
+        <!-- Upload Section -->
+        <section id="upload-section" class="card">
+            <h2>Upload FIT Files</h2>
+            <div class="upload-row">
+                <div class="upload-box" id="upload-box-1">
+                    <label for="file1">File 1</label>
+                    <input type="file" id="file1" accept=".fit" />
+                    <div class="file-info" id="file1-info">No file selected</div>
+                </div>
+                <div class="upload-box" id="upload-box-2">
+                    <label for="file2">File 2</label>
+                    <input type="file" id="file2" accept=".fit" />
+                    <div class="file-info" id="file2-info">No file selected</div>
+                </div>
+            </div>
+            <button id="compare-btn" disabled>Compare Files</button>
+        </section>
+
+        <!-- Filters Section -->
+        <section id="filters-section" class="card hidden">
+            <h2>Filters</h2>
+            <div class="filters-row">
+                <div class="filter-group">
+                    <label for="time-start">Start Time</label>
+                    <input type="time" id="time-start" step="1" />
+                </div>
+                <div class="filter-group">
+                    <label for="time-end">End Time</label>
+                    <input type="time" id="time-end" step="1" />
+                </div>
+                <div class="filter-group">
+                    <label for="metric-select">Metrics</label>
+                    <select id="metric-select" multiple size="5">
+                        <option value="heart_rate" selected>Heart Rate</option>
+                        <option value="power" selected>Power</option>
+                        <option value="speed" selected>Speed</option>
+                        <option value="cadence">Cadence</option>
+                        <option value="altitude">Altitude</option>
+                        <option value="temperature">Temperature</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label for="smoothing">Smoothing (seconds)</label>
+                    <input type="number" id="smoothing" value="1" min="1" max="120" />
+                </div>
+            </div>
+            <button id="apply-filters-btn">Apply Filters</button>
+        </section>
+
+        <!-- Summary Section -->
+        <section id="summary-section" class="card hidden">
+            <h2>Summary Comparison</h2>
+            <div id="summary-table-container"></div>
+        </section>
+
+        <!-- Charts Section -->
+        <section id="charts-section" class="hidden">
+            <div class="card" id="chart-heart_rate-card">
+                <h3>Heart Rate (bpm)</h3>
+                <div class="chart-container"><canvas id="chart-heart_rate"></canvas></div>
+            </div>
+            <div class="card" id="chart-power-card">
+                <h3>Power (watts)</h3>
+                <div class="chart-container"><canvas id="chart-power"></canvas></div>
+            </div>
+            <div class="card" id="chart-speed-card">
+                <h3>Speed (km/h)</h3>
+                <div class="chart-container"><canvas id="chart-speed"></canvas></div>
+            </div>
+            <div class="card" id="chart-cadence-card">
+                <h3>Cadence (rpm)</h3>
+                <div class="chart-container"><canvas id="chart-cadence"></canvas></div>
+            </div>
+            <div class="card" id="chart-altitude-card">
+                <h3>Altitude (m)</h3>
+                <div class="chart-container"><canvas id="chart-altitude"></canvas></div>
+            </div>
+            <div class="card" id="chart-temperature-card">
+                <h3>Temperature (&deg;C)</h3>
+                <div class="chart-container"><canvas id="chart-temperature"></canvas></div>
+            </div>
+        </section>
+
+        <!-- Averaged Tables Section -->
+        <section id="tables-section" class="hidden">
+            <div class="card">
+                <h2>Averaged Data Tables</h2>
+                <div class="tab-bar">
+                    <button class="tab active" data-interval="60">1 Minute Avg</button>
+                    <button class="tab" data-interval="300">5 Minute Avg</button>
+                    <button class="tab" data-interval="1200">20 Minute Avg</button>
+                </div>
+                <div id="avg-table-container"></div>
+            </div>
+        </section>
+
+        <!-- Difference Dashboard -->
+        <section id="diff-section" class="card hidden">
+            <h2>Difference Dashboard</h2>
+            <div class="chart-container"><canvas id="chart-diff"></canvas></div>
+            <div class="filter-group inline">
+                <label for="diff-metric">Metric:</label>
+                <select id="diff-metric">
+                    <option value="heart_rate">Heart Rate</option>
+                    <option value="power">Power</option>
+                    <option value="speed">Speed</option>
+                    <option value="cadence">Cadence</option>
+                    <option value="altitude">Altitude</option>
+                </select>
+            </div>
+        </section>
+    </main>
+
+    <script src="fit-parser.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>

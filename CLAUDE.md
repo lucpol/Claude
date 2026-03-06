@@ -7,16 +7,18 @@ This file provides guidance for AI assistants (Claude and others) working in thi
 **Repository:** lucpol/Claude
 **Status:** Active development
 
-This repository is currently being initialized. Update this section as the project's purpose and structure become established.
+A client-side web tool for uploading and comparing two FIT activity files (Garmin/ANT+). Synchronizes data by time of day and provides interactive charts, summary dashboards, difference analysis, and averaged data tables (1min, 5min, 20min).
 
 ## Repository Structure
 
 ```
 Claude/
-└── CLAUDE.md        # AI assistant guidance (this file)
+├── CLAUDE.md        # AI assistant guidance (this file)
+├── index.html       # Main HTML page
+├── styles.css       # Styles (dark theme)
+├── fit-parser.js    # Binary FIT file parser (client-side)
+└── app.js           # Application logic, charts, tables
 ```
-
-Update this tree as directories and files are added.
 
 ## Development Workflow
 
@@ -83,17 +85,10 @@ Establish these conventions once a primary language/framework is chosen. Common 
 Document commands here as they are established:
 
 ```bash
-# Install dependencies
-# <command>
-
-# Run development server
-# <command>
-
-# Run tests
-# <command>
-
-# Run linter/formatter
-# <command>
+# No build step required — open index.html in a browser
+# Or serve locally:
+python3 -m http.server 8000
+# Then open http://localhost:8000
 ```
 
 ## Testing
